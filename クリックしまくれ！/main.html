@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クリックしまくれ！</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>クリックしまくれ！</h1>
+    <div class="container">
+        <div class="center">
+            <label for="stage">秒数を選択:</label>
+            <select id="stage">
+                <option value="10">10秒</option>
+                <option value="20">20秒</option>
+                <option value="30">30秒</option>
+            </select>
+        </div>
+        <div class="center">
+            <label for="color">ボタンの色:</label>
+            <input type="color" id="color" value="#ff0000">
+        </div>
+        <div class="center">
+            <label for="shape">ボタンの形:</label>
+            <select id="shape">
+                <option value="circle">丸</option>
+                <option value="square">四角</option>
+            </select>
+        </div>
+        <div class="center">
+            <button id="clickButton">クリックしてスタート</button>
+        </div>
+        <div class="center" id="timer">制限時間: 0秒</div>
+        <div class="center" id="result"></div>
+        <div class="center">
+            <button id="restartButton" style="display:none;">再スタート</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
