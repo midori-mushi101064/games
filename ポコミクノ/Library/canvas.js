@@ -10,30 +10,36 @@ function clear() {
 }
 
 function canvasReset() {
-    // 背景を黒にする
-    document.body.style.setProperty("background-color", "#000000")
-    //canvas要素を作成
+    document.body.style.setProperty("background-color", "#000000");
+
     canvas = document.createElement('canvas');
-    //作成したcanvas要素をbodyタグに追加
     document.body.appendChild(canvas);
-    //canvasの横幅
-    canvas.width = screenSizeW;
-    //canvasの縦幅
-    canvas.height = screenSizeH;
-    // キャンバスの位置を中心に移動する
+
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = screenSizeW * dpr;
+    canvas.height = screenSizeH * dpr;
+
+    canvas.style.width = screenSizeW + 'px';
+    canvas.style.height = screenSizeH + 'px';
     canvas.style.setProperty("margin", "0px auto");
-    //ブラウザのサイズが変更されたとき、ReSizeを呼び出す
+    canvas.style.setProperty("display", "block");
+
+    let ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // スケーリング！
+
     addEventListener('resize', reSize, { passive: true });
-    //ReSizeを呼び出す
     reSize();
 }
 
-// サイズ変更
 function reSize() {
-    let ratio; // ブラウザとcanvasの比率
-    // ブラウザとcanvasの比率の、縦と横を計算し、小さいほうをratioに代入する
-    ratio = Math.min(innerWidth / canvas.width, innerHeight / canvas.height);
-    // canvasのサイズを、ブラウザに合わせて変更する
-    canvas.style.width = canvas.width * ratio + 'px';
-    canvas.style.height = canvas.height * ratio + 'px';
+    let ratio = Math.min(innerWidth / screenSizeW, innerHeight / screenSizeH);
+    canvas.style.transform = `scale(${ratio})`;
+    canvas.style.transformOrigin = 'top left';
+
+    // キャンバスを中央に表示する
+    const left = (innerWidth - screenSizeW * ratio) / 2;
+    const top = (innerHeight - screenSizeH * ratio) / 2;
+    canvas.style.position = 'absolute';
+    canvas.style.left = left + 'px';
+    canvas.style.top = top + 'px';
 }
