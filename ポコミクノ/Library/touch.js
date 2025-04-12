@@ -12,26 +12,34 @@ function touchReset() {
     canvas.onmousedown = handler;
     canvas.onmousemove = handler;
     canvas.onmouseup = handler;
-    canvas.addEventListener("touchstart", handler)
-    canvas.addEventListener("touchmove", handler)
-    canvas.addEventListener("touchend", handler)
+    canvas.addEventListener("touchstart", handler, { passive: false });
+    canvas.addEventListener("touchmove", handler, { passive: false });
+    canvas.addEventListener("touchend", handler, { passive: false });
 }
 //タッチの情報を取得
 function handler(e) {
-    //ずれを修正
     let rect = canvas.getBoundingClientRect();
-
     let scaleX = canvas.width / rect.width;
     let scaleY = canvas.height / rect.height;
-    //XY座標を取得
+
+    let clientX, clientY;
+
+    // タッチの場合
     if (e.touches && e.touches[0]) {
-        touchX = (e.touches[0].clientX - rect.left) * scaleX;
-        touchY = (e.touches[0].clientY - rect.top) * scaleY;
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+    } else if (e.changedTouches && e.changedTouches[0]) {
+        clientX = e.changedTouches[0].clientX;
+        clientY = e.changedTouches[0].clientY;
     } else {
-        touchX = (e.clientX - rect.left) * scaleX;
-        touchY = (e.clientY - rect.top) * scaleY;
+        // マウス操作
+        clientX = e.clientX;
+        clientY = e.clientY;
     }
-    //タッチ中か
+
+    touchX = (clientX - rect.left) * scaleX;
+    touchY = (clientY - rect.top) * scaleY;
+
     if (e.type === "mousedown" || e.type === "touchstart") {
         touchDown = true;
         touchUp = false;
@@ -42,17 +50,18 @@ function handler(e) {
         touchUp = true;
     }
 
-    // 2本目の指がある場合
     if (e.touches && e.touches[1]) {
         touchDown2 = true;
         touchUp2 = false;
     } else {
-        // 指が1本以下になった瞬間、2本目が離されたとみなす
         if (touchDown2) {
             touchDown2 = false;
             touchUp2 = true;
         }
     }
+
+    // デフォルト動作を止める（スクロールなど）
+    if (e.cancelable) e.preventDefault();
 }
 
 function waitForTouchUp() {
