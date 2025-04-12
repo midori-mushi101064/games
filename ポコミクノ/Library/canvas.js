@@ -10,36 +10,31 @@ function clear() {
 }
 
 function canvasReset() {
-    document.body.style.setProperty("background-color", "#000000");
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.body.style.overflow = 'hidden'; // スクロール防止
+    document.body.style.backgroundColor = '#000000';
 
     canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
 
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = screenSizeW * dpr;
-    canvas.height = screenSizeH * dpr;
+    canvas.width = screenSizeW;
+    canvas.height = screenSizeH;
 
-    canvas.style.width = screenSizeW + 'px';
-    canvas.style.height = screenSizeH + 'px';
-    canvas.style.setProperty("margin", "0px auto");
-    canvas.style.setProperty("display", "block");
+    canvas.style.display = 'block';
+    canvas.style.position = 'absolute';
+    canvas.style.top = '50%';
+    canvas.style.left = '50%';
+    canvas.style.transform = 'translate(-50%, -50%)'; // 中央に表示
 
-    let ctx = canvas.getContext('2d');
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // スケーリング！
-
-    addEventListener('resize', reSize, { passive: true });
+    window.addEventListener('resize', reSize, { passive: true });
     reSize();
 }
 
 function reSize() {
-    let ratio = Math.min(innerWidth / screenSizeW, innerHeight / screenSizeH);
-    canvas.style.transform = `scale(${ratio})`;
-    canvas.style.transformOrigin = 'top left';
-
-    // キャンバスを中央に表示する
-    const left = (innerWidth - screenSizeW * ratio) / 2;
-    const top = (innerHeight - screenSizeH * ratio) / 2;
-    canvas.style.position = 'absolute';
-    canvas.style.left = left + 'px';
-    canvas.style.top = top + 'px';
+    const scale = Math.min(window.innerWidth / screenSizeW, window.innerHeight / screenSizeH);
+    canvas.style.width = `${screenSizeW * scale}px`;
+    canvas.style.height = `${screenSizeH * scale}px`;
 }
+
+
