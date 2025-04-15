@@ -9,7 +9,7 @@ window.onload = async function () {
     reset();
     //クリックまで待つ
     await waitForTouchUp();
-    sound('assets/sounds/bgm/title.mp3', 'loop', 0.1);
+    sound('assets/sounds/bgm/title.mp3', 'loop', 0.3);
     //ゲームメインを呼び出す
     gameMain();
 }
@@ -28,6 +28,8 @@ function gameMain() {
     touchUp = false;
     //タッチ後の処理
     touchUp2 = true;
+    //キーの処理
+    keyJustPressed = {};
     //再びゲームを呼び出す
     requestAnimationFrame(gameMain);
 }
@@ -37,9 +39,14 @@ console.timeEnd("処理時間");  // 処理時間: 50ms（例）
 //変数の定義
 let paddleX;
 let paddleY;
+let pointerX;
+let pointerY;
 let paddleWidth;
+let arrowR;
 const pokoWidth = 50;
 const pokoHeight = 50;
+const mikunoWidth = 50;
+const mikunoHeight = 50;
 const wakuWidth = 720;
 
 let scene;
@@ -50,53 +57,86 @@ function reset() {
     touchReset();
     //ポコの初期化
     pokoReset();
+    //ミクノの初期化
+    mikunoReset();
     //変数の初期化
     paddleX = csX(0);
     paddleY = screenSizeH - 100;
     paddleWidth = 100;
     touchX = csX(0);
     scene = 'title';
+    cursorX = csX(0);
+    cursorY = csY(0);
+    arrowR = -90;
+    isCursor = false;
+    trails = [];
 }
 //ゲームを進める
 function step() {
+    //
+    trailStep();
+    //疑似カーソルの進行
+    cursorStep();
+    //カーソルの位置を決める
+    if (isCursor) {
+        pointerX = cursorX;
+        pointerY = cursorY;
+    }
+    else {
+        pointerX = touchX;
+        pointerY = touchY;
+    }
+    //矢印の角度を決める
+    if (!isCursor || (isCursor && cursorMode == 1)) {
+        arrowR = getAngle(paddleX, paddleY - pokoHeight, pointerX, pointerY);
+    }
     //パドルの進行
     paddleStep();
     //ポコの進行
     pokoStep();
 }
-
 //描画
 function Render() {
+    //
+    trailRender();
+    //枠の描画
+    wakuRender();
+    //ミクノの描画
+    mikunoRender();
     //ポコの描画
     pokoRender();
     //パドルの描画
     paddleRender();
     //矢印の描画
     arrowRender();
-    //枠の描画
-    wakuRender();
+    //疑似カーソルの描画
+    cursorRender();
 }
 
 //パドルの進行
 function paddleStep() {
-    //スペースキーが押されて無いとき動く
-    if (!keyPress(' ') && !touchDown2) {
-        paddleX += (touchX - paddleX) * 0.04;
+    //シフトキーが押されて無いとき動く
+    for (let i = 0; i < 10; i++) {
+        if (!keyPress('Shift') && !touchDown2) {
+            trail(paddleX, paddleY, 90, paddleWidth, 5);
+            paddleX += (pointerX - paddleX) * 0.004;
+        }
+
+        /*枠の当たり判定*/
+        //変数の宣言
+        const w = paddleWidth / 2 + 5;
+        const wakuW = wakuWidth / 2;
+        //当たり判定を計算
+        const left = Number(paddleX - w);
+        const right = Number(paddleX + w);
+        //枠の左右の判定
+        if (csX(0) - wakuW >= left || csX(0) + wakuW <= right) {
+            //X座標がそれ以上増えないようにする
+            paddleX = (csX(0) - wakuW >= left) ? csX(0) - wakuW + w : csX(0) + wakuW - w;
+        }
     }
-    /*枠の当たり判定*/
-    //変数の宣言
-    const w = paddleWidth / 2 + 5;
-    const wakuW = wakuWidth / 2;
-    //当たり判定を計算
-    const left = Number(paddleX - w);
-    const right = Number(paddleX + w);
-    //枠の左右の判定
-    if (csX(0) - wakuW >= left || csX(0) + wakuW <= right) {
-        //X座標がそれ以上増えないようにする
-        paddleX = (csX(0) - wakuW >= left) ? csX(0) - wakuW + w : csX(0) + wakuW - w;
-    }
-    //クリックしたらポコを発射
-    if (touchUp) {
+    //クリックかスペースキーを押したらポコを発射
+    if (touchUp || keyJustPress(' ')) {
         pokoMake();
     }
 }
@@ -119,9 +159,8 @@ function paddleRender() {
 //矢印の描画
 function arrowRender() {
     //変数を定義
-    const r = getAngle(paddleX, paddleY - pokoHeight, touchX, touchY);
-    const x = getMoveX(paddleX, r, 60);
-    const y = getMoveY(paddleY - pokoHeight, r, 60);
+    const x = getMoveX(paddleX, arrowR, 60);
+    const y = getMoveY(paddleY - pokoHeight, arrowR, 60);
     //キャンバスを取得
     const ctx = canvas.getContext('2d');
     //線を描く
@@ -129,9 +168,9 @@ function arrowRender() {
     ctx.lineWidth = 10;
     ctx.lineCap = "round";
     ctx.beginPath();
-    ctx.moveTo(getMoveX(x, r + 225, 30), getMoveY(y, r + 225, 30));
+    ctx.moveTo(getMoveX(x, arrowR + 225, 30), getMoveY(y, arrowR + 225, 30));
     ctx.lineTo(x, y);
-    ctx.lineTo(getMoveX(x, r + 135, 30), getMoveY(y, r + 135, 30));
+    ctx.lineTo(getMoveX(x, arrowR + 135, 30), getMoveY(y, arrowR + 135, 30));
     ctx.stroke();
     ctx.restore();
 }

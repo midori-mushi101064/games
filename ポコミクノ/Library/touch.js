@@ -28,6 +28,7 @@ function handler(e) {
     if (e.touches && e.touches[0]) {
         clientX = e.touches[0].clientX;
         clientY = e.touches[0].clientY;
+        isCursor = false;
     } else if (e.changedTouches && e.changedTouches[0]) {
         clientX = e.changedTouches[0].clientX;
         clientY = e.changedTouches[0].clientY;
@@ -35,6 +36,7 @@ function handler(e) {
         // マウス操作
         clientX = e.clientX;
         clientY = e.clientY;
+        isCursor = false;
     }
 
     touchX = (clientX - rect.left) * scaleX;
@@ -68,7 +70,7 @@ function waitForTouchUp() {
     let r = 20;
     return new Promise(resolve => {
         const check = () => {
-            if (touchUp) {
+            if (touchUp || keyPress('any')) {
                 resolve(); // 押された！
             } else {
                 requestAnimationFrame(check); // 次のフレームでまた確認

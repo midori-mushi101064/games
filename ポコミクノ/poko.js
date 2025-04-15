@@ -26,19 +26,20 @@ class Poko {
 
 //ポコのリストを定義
 const pokolist = [
-    { name: 'poko', src: 'assets/poko/ポコ.png', step: 3 },
-    { name: 'ringo', src: 'assets/poko/りんご.png', step: 2 },
-    { name: '90dopoko', src: 'assets/poko/90度ポコ.png', step: 5 },
-    { name: 'bomu', src: 'assets/poko/ボム.png', step: 1.5 },
-    { name: 'bomu2', src: 'assets/poko/ボム2.png', step: 0 },
-    { name: 'inoshishi', src: 'assets/poko/イノシシ.png', step: 3 },
-    { name: 'bu-merann', src: 'assets/poko/ブーメラン.png', step: 4 },
+    { name: 'poko', src: 'assets/images/poko/ポコ.png', step: 3 },
+    { name: 'ringo', src: 'assets/images/poko/りんご.png', step: 2 },
+    { name: '90dopoko', src: 'assets/images/poko/90度ポコ.png', step: 5 },
+    { name: 'bomu', src: 'assets/images/poko/ボム.png', step: 1.5 },
+    { name: 'bomu2', src: 'assets/images/poko/ボム2.png', step: 0 },
+    { name: 'inoshishi', src: 'assets/images/poko/イノシシ.png', step: 3 },
+    { name: 'bu-merann', src: 'assets/images/poko/ブーメラン.png', step: 4 },
 ];
 
 //変数の初期化
 function pokoReset() {
     Mypoko = [0, 1, 2, 3, 5, 6];
     pokoNum = [];
+    pokoWait = [];
 }
 
 //ポコをチャージ
@@ -74,7 +75,7 @@ function pokoMake() {
         //データを取得
         let p = pokoWait[0];
         //新たなポコを作成
-        p = new Poko(p.name, p.src, p.step, paddleX, paddleY - pokoHeight, getAngle(paddleX, paddleY - pokoHeight, touchX, touchY));
+        p = new Poko(p.name, p.src, p.step, paddleX, paddleY - pokoHeight, arrowR);
         //チャージから削除
         pokoWait.splice(0, 1)
         //盤面に追加
@@ -102,7 +103,7 @@ function pokoRender() {
         //データを取得
         const p = pokoWait[0]
         //ポコを描画
-        imgCR(p.src, paddleX, paddleY - pokoHeight, pokoWidth, pokoHeight, getAngle(paddleX, paddleY - pokoHeight, touchX, touchY));
+        imgCR(p.src, paddleX, paddleY - pokoHeight, pokoWidth, pokoHeight, arrowR);
     }
 }
 
@@ -158,6 +159,7 @@ function pokoMove(n, s) {
     if (s == undefined) {
         s = p.step;
     }
+    trail(p.x, p.y, p.r, pokoWidth, 4);
     // 新しい座標を計算
     p.x = getMoveX(p.x, p.r, s);
     p.y = getMoveY(p.y, p.r, s);
