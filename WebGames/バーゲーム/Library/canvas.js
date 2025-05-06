@@ -27,6 +27,7 @@ function canvasReset() {
     canvas.style.left = '50%';
     canvas.style.transform = 'translate(-50%, -50%)'; // 中央に表示
     canvas.style.zIndex = '0';  // ← canvasを一番後ろにする
+    canvas.style.borderRadius = '20px';  // ← canvasの角を丸くする
 
 
     window.addEventListener('resize', reSize, { passive: true });

@@ -38,7 +38,7 @@ canvas {
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: white;
+    background-color: rgb(61, 61, 61);
 }
 
 /* メニューコンテナ全体のスタイル */
@@ -68,7 +68,7 @@ body {
     width: 25px;
     height: 3px;
     margin: 5px 0;
-    background-color: #333;
+    background-color: #999999;
     transition: 0.4s;
 }
 
@@ -122,6 +122,16 @@ body {
 .menu ul li a {
     text-decoration: none;
     color: #333;
+    font-size: 18px;
+    display: block;
+    padding: 10px 0;
+    transition: 0.2s;
+}
+
+/* メニュー内リストのタイトルのスタイル */
+.menu ul li b {
+    text-decoration: none;
+    color: #232ba1;
     font-size: 18px;
     display: block;
     padding: 10px 0;

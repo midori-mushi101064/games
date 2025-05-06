@@ -128,6 +128,16 @@ body {
     transition: 0.2s;
 }
 
+/* メニュー内リストのタイトルのスタイル */
+.menu ul li b {
+    text-decoration: none;
+    color: #23a177;
+    font-size: 18px;
+    display: block;
+    padding: 10px 0;
+    transition: 0.2s;
+}
+
 /* メニュー内リストのリンクのホバー時のスタイル */
 .menu ul li a:hover {
     color: #dd87af;
