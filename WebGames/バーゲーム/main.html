@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>バーゲーム</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="menu-container">
+        <input type="checkbox" id="menu-toggle">
+        <nav class="menu">
+            <ul>
+                <li><a href="https://midori-mushi101064.github.io/games/WebGames/WebHub.html"
+                        style="color: rgb(26, 70, 134);">一覧に戻る</a>
+                </li>
+                <li>ゲーム-------------------------------------------------------</li>
+                <li><a href="https://midori-mushi101064.github.io/games/WebGames/バーゲーム/main.html">バーゲーム</a></li>
+                <li><a href="#">人狼ゲーム(未完成)</a></li>
+                <li><a href="#">爆弾ゲーム(未完成)</a></li>
+                <li><a href="#">ワードウルフ(未完成)</a></li>
+                <li>設定---------------------------------------------------------</li>
+                <li>ゲームモード
+                    <select id="mode">
+                        <option value="rennda">連打バトル</option>
+                        <option value="battominntonn">バトミントン(未完成)</option>
+                        <option value="setuna">バトミントン(未完成)</option>
+                    </select>
+                </li>
+                <li>
+                    <details>
+                        <summary>連打バトル</summary>
+                        <ul>
+                            <li>クリックごとの増加する量 <input id='click' type="number" value="5"></li>
+                            <li>カウントダウン <input id='count' type="number" value="3"></li>
+                        </ul>
+                    </details>
+                </li>
+                <li><button onclick="gameReset(),sound('assets/sounds/reset.mp3', 'start' )">再スタート</button></li>
+            </ul>
+        </nav>
+        <label for="menu-toggle" class="menu-button">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </label>
+    </div>
+    <script src="Library\sound.js"></script>
+    <script src="Library\canvas.js"></script>
+    <script src="Library\image.js"></script>
+    <script src="Library\CS.js"></script>
+    <script src="Library\hit.js"></script>
+    <script src="Library\Key.js"></script>
+    <script src="Library\touch.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
