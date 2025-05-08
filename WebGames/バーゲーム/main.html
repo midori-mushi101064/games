@@ -13,7 +13,7 @@
         <nav class="menu">
             <ul>
                 <li><a href="https://midori-mushi101064.github.io/games/WebGames/WebHub.html"
-                        style="color: rgb(26, 70, 134);">一覧に戻る</a>
+                        style="color: rgb(40, 109, 212);">一覧に戻る</a>
                 </li>
                 <li><b>ゲーム-------------------------------------------------------</b></li>
                 <li><a href="https://midori-mushi101064.github.io/games/WebGames/バーゲーム/main.html">バーゲーム</a></li>
@@ -24,18 +24,25 @@
                 <li>ゲームモード
                     <select id="mode">
                         <option value="rennda">連打バトル</option>
-                        <option value="battominntonn">バトミントン(未完成)</option>
-                        <option value="setuna">バトミントン(未完成)</option>
+                        <option value="battominntonn">バトミントン</option>
+                        <option value="setuna">刹那の見切り(未完成)</option>
                     </select>
                 </li>
                 <li>
                     <details>
                         <summary>連打バトル</summary>
-                        <ul>
-                            <li>クリックごとの増加する量 <input id='click' type="number" value="5"></li>
-                            <li>カウントダウン <input id='count' type="number" value="3"></li>
-                        </ul>
-                    </details>
+                <li>バー移動 <input id='click' type="number" value="5"></li>
+                <li>カウントダウン <input id='renndaCount' type="number" value="3" min="0"></li>
+                </details>
+                </li>
+                <li>
+                    <details>
+                        <summary>バトミントン</summary>
+                <li>スピード増加 <input id='speedValue' type="number" value="5"></li>
+                <li>跳ね返し範囲 狭い<input id="hanni" type="range" min="-15" max="35" step="5" value="10">広い</li>
+                <li>コート範囲 狭い<input id="berWidth" type="range" min="200" max="400" step="10" value="300">広い</li>
+                <li>カウントダウン <input id='battominntonnCount' type="number" value="3"></li>
+                </details>
                 </li>
                 <li><button onclick="gameReset(),sound('assets/sounds/reset.mp3', 'start' )">再スタート</button></li>
             </ul>

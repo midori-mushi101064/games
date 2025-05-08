@@ -34,17 +34,6 @@ function gameMain() {
 
 console.timeEnd("処理時間");  // 処理時間: 50ms（例）
 
-//変数の定義
-let score;
-let win;
-let winCount;
-let earthquakeX;
-let earthquakeY;
-let isShot;
-let isBoom;
-let clickValue;
-let gameMode;
-let stertCount;
 //初期化
 function reset() {
     //変数等の初期化
@@ -57,51 +46,57 @@ function reset() {
 function step() {
     if (isClick && startCount <= 0) {
         switch (gameMode) {
+            //連打バトル
             case 'rennda':
-
                 if (win == 0) {
-                    if (touchUp && touchX < csX()) {
-                        sound("assets/sounds/panch1.mp3", 'start');
-                        score += clickValue;
-                    }
-                    if (touchUp && touchX >= csX()) {
-                        sound("assets/sounds/panch2.mp3", 'start');
-                        score -= clickValue;
-                    }
-                    if (score >= 100) {
-                        score = 100;
-                        win = 1;
-                        sound("assets/sounds/charge.mp3", 'start');
-                    }
-                    if (score <= 0) {
-                        score = 0;
-                        win = 2;
-                        sound("assets/sounds/charge.mp3", 'start');
-                    }
-                }
-                else {
-                    winCount += (winCount <= 0) ? 0.05 : 1;
-                    if (winCount >= 10) {
-                        earthquakeX = getRundomInt(50) - 25;
-                        earthquakeY = getRundomInt(50) - 25;
-                        if (!isBoom) {
-                            sound("assets/sounds/boom.mp3", 'start');
-                            isBoom = true;
+                    if (!touchDown && touchUp) {
+                        if (touchX < csX()) {
+                            sound("assets/sounds/panch1.mp3", 'start');
+                            score += clickValue;
+                        }
+                        else if (touchX >= csX()) {
+                            sound("assets/sounds/panch2.mp3", 'start');
+                            score -= clickValue;
                         }
                     }
-                    if (winCount >= 0 && !isShot) {
-                        sound("assets/sounds/shot.mp3", 'start');
-                        isShot = true;
-                    }
-                    if (win == 1) score += winCount;
-                    else score += -winCount;
                 }
-                if (winCount >= 10 && touchUp) {
-                    gameReset();
-                }
+                winStep();
                 break;
+            //バトミントン
             case 'battominntonn':
+                if (win == 0) {
+                    const n = csX(-berWidth) + hanni - 50 * (berWidth / 50);
+                    const m = csX(-berWidth) + score * (berWidth / 50) + earthquakeX;
+                    if (!touchDown && touchUp) {
+                        if (touchX < csX() && m <= csX(n)) {
+                            if (getRundomInt(2) == 1) sound("assets/sounds/pass1.mp3", 'start'); else sound("assets/sounds/pass2.mp3", 'start', 0.5);
+                            if (vScore <= 0) {
+                                passNum++;
+                                vScore += speedValue;
+                            }
+                            vScore = Math.abs(vScore);
+                            vScore += speedValue;
+                        }
+                        if (touchX >= csX() && m >= csX(-n)) {
+                            if (getRundomInt(2) == 1) sound("assets/sounds/pass1.mp3", 'start'); else sound("assets/sounds/pass2.mp3", 'start', 0.5);
+                            if (vScore >= 0) {
+                                passNum++;
+                                vScore += speedValue;
+                            }
+                            vScore = Math.abs(vScore);
+                            vScore *= -1;
+                        }
+                    }
+                    if (touchDown && (touchX < csX() && m <= csX(n) || touchX >= csX() && m >= csX(-n))) {
+                        score += vScore * 0.3;
+                    }
+                    else {
+                        score += vScore;
+                    }
+                }
+                winStep();
                 break;
+            //刹那の見切り
             case 'setuna':
                 break;
         }
@@ -123,7 +118,7 @@ function Render() {
     // canvas要素を取得
     const ctx = canvas.getContext('2d');
     const y = csY(0) + earthquakeY;
-    const x = csX(-200) + score * 4 + earthquakeX;
+    const x = csX(-berWidth) + score * (berWidth / 50) + earthquakeX;
     //スコアによって前後を変える
     if (score <= 50) {
         blueBerRender();
@@ -133,10 +128,23 @@ function Render() {
         RedBerRender();
         blueBerRender();
     }
+    ctx.save();
+    ctx.lineCap = "round";
+    if (gameMode == 'battominntonn') {
+        ctx.strokeStyle = "#f0dd9e";
+        ctx.lineWidth = 20;
+        ctx.beginPath();
+        const n = csX(-berWidth) + hanni - 50 * (berWidth / 50);
+        ctx.moveTo(csX(-n), y + 25);
+        ctx.lineTo(csX(-n), y - 25);
+        ctx.moveTo(csX(n), y + 25);
+        ctx.lineTo(csX(n), y - 25);
+        ctx.stroke();
+        textC(csX(), csY(150), `${passNum}`, 100, '#bbf09e');
+    }
     //境目の火花(？)を描画
     ctx.strokeStyle = "#f7f7df";
     ctx.lineWidth = 50;
-    ctx.lineCap = "round";
     ctx.beginPath();
     ctx.moveTo(x, y + 50);
     ctx.lineTo(x, y - 50);
@@ -162,19 +170,19 @@ function blueBerRender() {
     // canvas要素を取得
     const ctx = canvas.getContext('2d');
     const y = csY(0) + earthquakeY;
-    const x = csX(-200) + score * 4 + earthquakeX;
+    const x = csX(-berWidth) + score * (berWidth / 50) + earthquakeX;
     //線を描く
     ctx.save();
     ctx.lineWidth = 100;
     ctx.lineCap = "round";
     ctx.strokeStyle = "#99ebf2";
     ctx.beginPath();
-    ctx.moveTo(csX(-200) + earthquakeX, y);
-    if (score >= 10) {
+    ctx.moveTo(csX(-berWidth) + earthquakeX, y);
+    if (x >= csX(-berWidth + 30)) {
         ctx.lineTo(x - 25, y);
     }
     else {
-        ctx.lineTo(csX(-200) + earthquakeX, y);
+        ctx.lineTo(csX(-berWidth) + earthquakeX, y);
     }
     ctx.stroke();
     ctx.restore();
@@ -184,23 +192,77 @@ function RedBerRender() {
     // canvas要素を取得
     const ctx = canvas.getContext('2d');
     const y = csY(0) + earthquakeY;
-    const x = csX(-200) + score * 4 + earthquakeX;
+    const x = csX(-berWidth) + score * (berWidth / 50) + earthquakeX;
     //線を描く
     ctx.save();
     ctx.lineWidth = 100;
     ctx.lineCap = "round";
     ctx.strokeStyle = "#f09e9e";
     ctx.beginPath();
-    ctx.moveTo(csX(200) + earthquakeX, y);
-    if (score <= 90) {
+    ctx.moveTo(csX(berWidth) + earthquakeX, y);
+    if (x <= csX(berWidth - 30)) {
         ctx.lineTo(x + 25, y);
     }
     else {
-        ctx.lineTo(csX(200) + earthquakeX, y);
+        ctx.lineTo(csX(berWidth) + earthquakeX, y);
     }
     ctx.stroke();
     ctx.restore();
 }
+function winStep() {
+    if (win == 0) {
+        if (score >= 100) {
+            score = 100;
+            win = 1;
+            sound("assets/sounds/charge.mp3", 'start');
+        }
+        if (score <= 0) {
+            score = 0;
+            win = 2;
+            sound("assets/sounds/charge.mp3", 'start');
+        }
+    }
+    else {
+        winCount += (winCount <= 0) ? 0.05 : 1;
+        if (winCount >= 10) {
+            earthquakeX = getRundomInt(50) - 25;
+            earthquakeY = getRundomInt(50) - 25;
+            if (!isBoom) {
+                sound("assets/sounds/boom.mp3", 'start');
+                isBoom = true;
+            }
+        }
+        if (winCount >= 0 && !isShot) {
+            sound("assets/sounds/shot.mp3", 'start');
+            isShot = true;
+        }
+        if (win == 1) score += winCount;
+        else score += -winCount;
+    }
+    if (winCount >= 10 && touchUp) {
+        gameReset();
+    }
+}
+
+
+//変数の定義
+let score;
+let win;
+let winCount;
+let earthquakeX;
+let earthquakeY;
+let isShot;
+let isBoom;
+let clickValue;
+let gameMode;
+let startCount;
+let speedValue;
+let chargeTime;
+let chargeValue;
+let hanni;
+let vScore;
+let berWidth;
+let passNum;
 
 function gameReset() {
     valueReset();
@@ -212,14 +274,28 @@ function valueReset() {
     //変数の初期化
     score = 50;
     win = 0;
-    winCount = -3;
+    winCount = -2;
     earthquakeX = 0;
     earthquakeY = 0;
     isShot = false;
     isBoom = false;
+    console.log(vScore);
     gameMode = document.getElementById("mode").value;
-    clickValue = Number(document.getElementById("click").value);
-    countMax = Number(document.getElementById("count").value);
+    switch (gameMode) {
+        case 'rennda':
+            clickValue = Number(document.getElementById("click").value);
+            countMax = Number(document.getElementById("renndaCount").value);
+            berWidth = 200;
+            break;
+        case 'battominntonn':
+            speedValue = Number(document.getElementById("speedValue").value) / 50;
+            hanni = Number(document.getElementById("hanni").value) * 3;
+            countMax = Number(document.getElementById("battominntonnCount").value);
+            berWidth = Number(document.getElementById("berWidth").value);
+            passNum = 0;
+            vScore = (getRundomInt(2) == 1) ? 0.5 : -0.5;
+            break;
+    }
     if (countMax <= 0) countMax = 0.01;
     //音を止める
     sound("assets/sounds/boom.mp3", 'stop');

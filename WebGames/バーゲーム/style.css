@@ -38,7 +38,7 @@ canvas {
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: rgb(61, 61, 61);
+    background-color: black;
 }
 
 /* メニューコンテナ全体のスタイル */
@@ -68,7 +68,7 @@ body {
     width: 25px;
     height: 3px;
     margin: 5px 0;
-    background-color: #999999;
+    background-color: #a7a7a7;
     transition: 0.4s;
 }
 
@@ -100,7 +100,7 @@ body {
     /* 変更: メニューを左からスライドインさせるために left に設定 */
     width: 100%;
     height: 100%;
-    background-color: #f3f3f38e;
+    background-color: #1111118e;
     transition: 0.4s;
     z-index: 1;
     overflow-y: auto;
@@ -118,10 +118,11 @@ body {
     padding: 20px;
 }
 
-/* メニュー内リストのリンクのスタイル */
-.menu ul li a {
+/* メニュー内リストのリンクとテキストのスタイル */
+.menu ul li a,
+.menu ul li {
     text-decoration: none;
-    color: #333;
+    color: #a3a3a3;
     font-size: 18px;
     display: block;
     padding: 10px 0;
@@ -131,7 +132,7 @@ body {
 /* メニュー内リストのタイトルのスタイル */
 .menu ul li b {
     text-decoration: none;
-    color: #232ba1;
+    color: #23a177;
     font-size: 18px;
     display: block;
     padding: 10px 0;
@@ -139,7 +140,8 @@ body {
 }
 
 /* メニュー内リストのリンクのホバー時のスタイル */
-.menu ul li a:hover {
+.menu ul li a:hover,
+.menu ul li details:hover {
     color: #bf7497;
 }
 
@@ -155,7 +157,8 @@ body {
     /* ← メニュー部分だけクリック有効化 */
 }
 
-/* メニュー内リストの入力欄のスタイル */
-.menu ul li input {
+/* メニュー内リストの入力欄とセレクトのスタイル */
+.menu ul li input,
+.menu ul li select {
     border-radius: 5px;
 }

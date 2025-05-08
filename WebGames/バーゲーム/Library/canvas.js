@@ -40,4 +40,15 @@ function reSize() {
     canvas.style.height = `${screenSizeH * scale}px`;
 }
 
+// フルスクリーンにする関数
+function Fullscreen() {
+    if (canvas.requestFullscreen) {
+        canvas.requestFullscreen();
+    } else if (canvas.webkitRequestFullscreen) { // iPhone対応
+        canvas.webkitRequestFullscreen();
+    } else if (canvas.msRequestFullscreen) { // 古いIE対応
+        canvas.msRequestFullscreen();
+    }
+}
+
 
