@@ -45,16 +45,20 @@ function reset() {
 //ゲームを進める
 function step() {
     if (isClick && startCount <= 0) {
+        const isAttack = (!(touchDown && touchUp2) && touchUp) || (keyJustPress('ArrowRight') || keyJustPress('ArrowLeft'));
+        const R = keyPress('ArrowRight');
+        const L = keyPress('ArrowLeft');
+        //console.log(keyPressed);
         switch (gameMode) {
             //連打バトル
             case 'rennda':
                 if (win == 0) {
-                    if (!touchDown && touchUp) {
-                        if (touchX < csX()) {
+                    if (isAttack) {
+                        if (touchX < csX() || R) {
                             sound("assets/sounds/panch1.mp3", 'start');
                             score += clickValue;
                         }
-                        else if (touchX >= csX()) {
+                        else if (touchX >= csX() || L) {
                             sound("assets/sounds/panch2.mp3", 'start');
                             score -= clickValue;
                         }
@@ -67,8 +71,8 @@ function step() {
                 if (win == 0) {
                     const n = csX(-berWidth) + hanni - 50 * (berWidth / 50);
                     const m = csX(-berWidth) + score * (berWidth / 50) + earthquakeX;
-                    if (!touchDown && touchUp) {
-                        if (touchX < csX() && m <= csX(n)) {
+                    if (isAttack) {
+                        if ((touchX < csX() || L) && m <= csX(n)) {
                             if (getRundomInt(2) == 1) sound("assets/sounds/pass1.mp3", 'start'); else sound("assets/sounds/pass2.mp3", 'start', 0.5);
                             if (vScore <= 0) {
                                 passNum++;
@@ -77,7 +81,7 @@ function step() {
                             vScore = Math.abs(vScore);
                             vScore += speedValue;
                         }
-                        if (touchX >= csX() && m >= csX(-n)) {
+                        if ((touchX >= csX() || R) && m >= csX(-n)) {
                             if (getRundomInt(2) == 1) sound("assets/sounds/pass1.mp3", 'start'); else sound("assets/sounds/pass2.mp3", 'start', 0.5);
                             if (vScore >= 0) {
                                 passNum++;
@@ -87,7 +91,7 @@ function step() {
                             vScore *= -1;
                         }
                     }
-                    if (touchDown && (touchX < csX() && m <= csX(n) || touchX >= csX() && m >= csX(-n))) {
+                    if ((touchDown && (((touchX < csX() || L) && m <= csX(n)) || ((touchX >= csX() || R) && m >= csX(-n))))) {
                         score += vScore * 0.3;
                     }
                     else {
@@ -98,18 +102,51 @@ function step() {
                 break;
             //刹那の見切り
             case 'setuna':
+                if (win == 0) {
+                    if (touchDown || R || L) {
+                        sound("assets/sounds/slash2.mp3", 'start', 0.5);
+                        sound("assets/sounds/slash3.mp3", 'start', 0.3);
+                        sound("assets/sounds/slash4.mp3", 'start');
+                        sound("assets/sounds/window.mp3", 'stop');
+                        if (touchX < csX() || R) {
+                            score = 100;
+                        }
+                        else if (touchX >= csX() || L) {
+                            score = 0;
+                        }
+                    }
+                }
+                winStep();
+                startCount--;
                 break;
         }
     }
     else {
+        const P = keyPress('any');
         if (touchUp && !isClick) {
-            sound("assets/sounds/count.mp3", 'start')
-            isClick = true;
             valueReset();
         }
-        if (isClick) startCount--;
-        if (isClick && startCount / 50 == Math.floor(startCount / 50) && !startCount <= 0) sound("assets/sounds/count.mp3", 'start');
-        if (startCount <= 0) sound("assets/sounds/start.mp3", 'start');
+        if (gameMode == 'setuna') {
+            if (touchUp || P && !isClick) {
+                sound("assets/sounds/window.mp3", 'loop');
+                sound("assets/sounds/slash1.mp3", 'start', 0.2);
+                isClick = true;
+            }
+            if (isClick) startCount--;
+            if (startCount <= 0) {
+                sound("assets/sounds/start.mp3", 'start');
+                sound("assets/sounds/window.mp3", 'stop');
+            }
+        }
+        else {
+            if (touchUp || P && !isClick) {
+                sound("assets/sounds/count.mp3", 'start')
+                isClick = true;
+            }
+            if (isClick) startCount--;
+            if (isClick && startCount / 50 == Math.floor(startCount / 50) && !startCount <= 0) sound("assets/sounds/count.mp3", 'start');
+            if (startCount <= 0) sound("assets/sounds/start.mp3", 'start');
+        }
     }
 }
 
@@ -158,7 +195,13 @@ function Render() {
         textC(csX(), csY(25), `${text}の勝ち`, 60, coler);
         textC(csX(), csY(-25), 'クリックしてリスタート', 30, coler);
     }
-    if (startCount > 0) {
+    if (gameMode == 'setuna') {
+        if (!isClick) textC(csX(), csY(), 'クリックしてスタート', 50, '#bbf09e');
+        if (startCount <= 0 && win == 0) {
+            textC(csX(), csY(), ' 斬れ！', 100, '#bbf09e');
+        }
+    }
+    else if (startCount > 0) {
         if (!isClick) textC(csX(), csY(), 'クリックしてスタート', 50, '#bbf09e');
         let n = Math.floor(startCount / 50 + 1);
         let m = 100 + Math.floor(startCount * 5) / Math.floor(startCount / 50 + 1);
@@ -239,7 +282,8 @@ function winStep() {
         if (win == 1) score += winCount;
         else score += -winCount;
     }
-    if (winCount >= 10 && touchUp) {
+    const P = keyPress('any');
+    if (winCount >= 10 && (touchUp || P)) {
         gameReset();
     }
 }
@@ -294,6 +338,9 @@ function valueReset() {
             berWidth = Number(document.getElementById("berWidth").value);
             passNum = 0;
             vScore = (getRundomInt(2) == 1) ? 0.5 : -0.5;
+            break;
+        case 'setuna':
+            countMax = getRundomInt(Number(document.getElementById("timeMax").value) + (Number(document.getElementById("timeMin").value) - 1));
             break;
     }
     if (countMax <= 0) countMax = 0.01;
