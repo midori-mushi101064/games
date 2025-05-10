@@ -115,3 +115,20 @@ function textC(x, y, text, px, color,) {
     ctx.fillStyle = color;
     ctx.fillText(text, x - textWidth / 2, y + px / 3);
 }
+
+function roundRect(x, y, width, height, radius) {
+    //キャンバスを取得
+    const ctx = canvas.getContext('2d');
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.arcTo(x + width, y, x + width, y + radius, radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+    ctx.lineTo(x + radius, y + height);
+    ctx.arcTo(x, y + height, x, y + height - radius, radius);
+    ctx.lineTo(x, y + radius);
+    ctx.arcTo(x, y, x + radius, y, radius);
+    ctx.closePath();
+    ctx.fill();
+}

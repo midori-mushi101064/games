@@ -148,6 +148,11 @@ function step() {
             if (startCount <= 0) sound("assets/sounds/start.mp3", 'start');
         }
     }
+    const X = touchX >= 10 && touchX <= 90;
+    const Y = touchY >= 10 && touchY <= 90;
+    if (touchUp && X & Y) {
+        document.getElementById("menu-toggle").checked = true;
+    }
 }
 
 //描画
@@ -186,14 +191,18 @@ function Render() {
     ctx.moveTo(x, y + 50);
     ctx.lineTo(x, y - 50);
     ctx.stroke();
+    //
+    ctx.fillStyle = "#97e6c2";
+    roundRect(10, 10, 90, 90, 10);  // 半径10pxの角丸四角形
     ctx.restore();
+    img('setIcon.png', 10, 10, 90, 90);
     if (winCount >= 10) {
         let coler;
         let text;
         if (win == 1) coler = "#25a5b0", text = '青';
         else coler = "#942626", text = '赤';
         textC(csX(), csY(25), `${text}の勝ち`, 60, coler);
-        textC(csX(), csY(-25), 'クリックしてリスタート', 30, coler);
+        if (winCount >= 50) textC(csX(), csY(-25), 'クリックしてリスタート', 30, coler);
     }
     if (gameMode == 'setuna') {
         if (!isClick) textC(csX(), csY(), 'クリックしてスタート', 50, '#bbf09e');
@@ -283,7 +292,7 @@ function winStep() {
         else score += -winCount;
     }
     const P = keyPress('any');
-    if (winCount >= 10 && (touchUp || P)) {
+    if (winCount >= 50 && (touchUp || P)) {
         gameReset();
     }
 }
