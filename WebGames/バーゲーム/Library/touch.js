@@ -16,7 +16,9 @@ function touchReset() {
     canvas.addEventListener("touchmove", handler, { passive: false });
     canvas.addEventListener("touchend", handler, { passive: false });
 }
-//タッチの情報を取得
+//タッチの情報を取得// 1本目の指のIDを覚えておく
+let primaryTouchId = null;
+
 function handler(e) {
     let rect = canvas.getBoundingClientRect();
     let scaleX = canvas.width / rect.width;
@@ -24,47 +26,70 @@ function handler(e) {
 
     let clientX, clientY;
 
-    // タッチの場合
-    if (e.touches && e.touches[0]) {
-        clientX = e.touches[0].clientX;
-        clientY = e.touches[0].clientY;
-        isCursor = false;
-    } else if (e.changedTouches && e.changedTouches[0]) {
-        clientX = e.changedTouches[0].clientX;
-        clientY = e.changedTouches[0].clientY;
-    } else {
-        // マウス操作
+    if (e.type === "touchstart") {
+        // 新しく指が触れたとき
+        if (primaryTouchId === null) {
+            // まだ1本目が決まってないなら
+            primaryTouchId = e.changedTouches[0].identifier;
+            clientX = e.changedTouches[0].clientX;
+            clientY = e.changedTouches[0].clientY;
+            touchDown = true;
+            touchUp = false;
+        }
+
+        if (e.touches.length >= 2) {
+            touchDown2 = true;
+            touchUp2 = false;
+        }
+
+    } else if (e.type === "touchmove") {
+        // 動いた指の中に1本目があるなら座標更新
+        for (let t of e.touches) {
+            if (t.identifier === primaryTouchId) {
+                clientX = t.clientX;
+                clientY = t.clientY;
+            }
+        }
+
+    } else if (e.type === "touchend" || e.type === "touchcancel") {
+        // 指が離れたとき
+        for (let t of e.changedTouches) {
+            if (t.identifier === primaryTouchId) {
+                // 1本目が離れたら
+                touchDown = false;
+                touchUp = true;
+                primaryTouchId = null;
+            }
+        }
+
+        if (e.touches.length < 2 && touchDown2) {
+            touchDown2 = false;
+            touchUp2 = true;
+        }
+
+    } else if (e.type === "mousedown") {
         clientX = e.clientX;
         clientY = e.clientY;
-        isCursor = false;
-    }
-
-    touchX = (clientX - rect.left) * scaleX;
-    touchY = (clientY - rect.top) * scaleY;
-
-    if (e.type === "mousedown" || e.type === "touchstart") {
         touchDown = true;
         touchUp = false;
-    }
-
-    if (e.type === "mouseup" || e.type === "touchend") {
+    } else if (e.type === "mousemove") {
+        clientX = e.clientX;
+        clientY = e.clientY;
+    } else if (e.type === "mouseup") {
+        clientX = e.clientX;
+        clientY = e.clientY;
         touchDown = false;
         touchUp = true;
     }
 
-    if (e.touches && e.touches[1]) {
-        touchDown2 = true;
-        touchUp2 = false;
-    } else {
-        if (touchDown2) {
-            touchDown2 = false;
-            touchUp2 = true;
-        }
+    if (clientX !== undefined && clientY !== undefined) {
+        touchX = (clientX - rect.left) * scaleX;
+        touchY = (clientY - rect.top) * scaleY;
     }
 
-    // デフォルト動作を止める（スクロールなど）
     if (e.cancelable) e.preventDefault();
 }
+
 
 /*
 function waitForTouchUp() {

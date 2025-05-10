@@ -44,8 +44,16 @@ function reset() {
 
 //ゲームを進める
 function step() {
+    const X = touchX >= 10 && touchX <= 90;
+    const Y = touchY >= 10 && touchY <= 90;
+    if (touchUp && X & Y) {
+        document.getElementById("menu-toggle").checked = true;
+    }
+    const check = document.getElementById("menu-toggle").checked;
+    const Down = touchDown && !check && !(X & Y);
+    const Up = touchUp && !check && !(X & Y);
     if (isClick && startCount <= 0) {
-        const isAttack = (!(touchDown && touchUp2) && touchUp) || (keyJustPress('ArrowRight') || keyJustPress('ArrowLeft'));
+        const isAttack = (Up) || (keyJustPress('ArrowRight') || keyJustPress('ArrowLeft'));
         const R = keyPress('ArrowRight');
         const L = keyPress('ArrowLeft');
         //console.log(keyPressed);
@@ -91,7 +99,7 @@ function step() {
                             vScore *= -1;
                         }
                     }
-                    if ((touchDown && (((touchX < csX() || L) && m <= csX(n)) || ((touchX >= csX() || R) && m >= csX(-n))))) {
+                    if ((Down && (((touchX < csX() || L) && m <= csX(n)) || ((touchX >= csX() || R) && m >= csX(-n))))) {
                         score += vScore * 0.3;
                     }
                     else {
@@ -103,7 +111,7 @@ function step() {
             //刹那の見切り
             case 'setuna':
                 if (win == 0) {
-                    if (touchDown || R || L) {
+                    if (Down || R || L) {
                         sound("assets/sounds/slash2.mp3", 'start', 0.5);
                         sound("assets/sounds/slash3.mp3", 'start', 0.3);
                         sound("assets/sounds/slash4.mp3", 'start');
@@ -123,11 +131,11 @@ function step() {
     }
     else {
         const P = keyPress('any');
-        if (touchUp && !isClick) {
+        if (Up && !isClick) {
             valueReset();
         }
         if (gameMode == 'setuna') {
-            if (touchUp || P && !isClick) {
+            if ((Up || P) && !isClick) {
                 sound("assets/sounds/window.mp3", 'loop');
                 sound("assets/sounds/slash1.mp3", 'start', 0.2);
                 isClick = true;
@@ -139,7 +147,7 @@ function step() {
             }
         }
         else {
-            if (touchUp || P && !isClick) {
+            if ((Up || P) && !isClick) {
                 sound("assets/sounds/count.mp3", 'start')
                 isClick = true;
             }
@@ -147,11 +155,6 @@ function step() {
             if (isClick && startCount / 50 == Math.floor(startCount / 50) && !startCount <= 0) sound("assets/sounds/count.mp3", 'start');
             if (startCount <= 0) sound("assets/sounds/start.mp3", 'start');
         }
-    }
-    const X = touchX >= 10 && touchX <= 90;
-    const Y = touchY >= 10 && touchY <= 90;
-    if (touchUp && X & Y) {
-        document.getElementById("menu-toggle").checked = true;
     }
 }
 
@@ -195,7 +198,7 @@ function Render() {
     ctx.fillStyle = "#97e6c2";
     roundRect(10, 10, 90, 90, 10);  // 半径10pxの角丸四角形
     ctx.restore();
-    img('setIcon.png', 10, 10, 90, 90);
+    img('setIcon.png', 20, 20, 70, 70);
     if (winCount >= 10) {
         let coler;
         let text;
@@ -262,6 +265,10 @@ function RedBerRender() {
     ctx.restore();
 }
 function winStep() {
+    const X = touchX >= 10 && touchX <= 90;
+    const Y = touchY >= 10 && touchY <= 90;
+    const check = document.getElementById("menu-toggle").checked;
+    const Up = touchUp && !check && !(X & Y);
     if (win == 0) {
         if (score >= 100) {
             score = 100;
@@ -292,7 +299,7 @@ function winStep() {
         else score += -winCount;
     }
     const P = keyPress('any');
-    if (winCount >= 50 && (touchUp || P)) {
+    if (winCount >= 50 && (Up || P)) {
         gameReset();
     }
 }
