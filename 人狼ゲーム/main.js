@@ -245,10 +245,10 @@ function rangeNames() {
             const newRow = table.insertRow(1);  // 最後に追加
             if (document.getElementById("namecheckbox").checked == true) {
                 const name = names[Math.floor(Math.random() * names.length)];
-                newRow.insertCell(0).innerHTML = `<input class=nameinput value="${name}" name="playerName"></input>`;
+                newRow.insertCell(0).innerHTML = `<input class=nameinput value="${name}" name="playerName">`;
             }
             else {
-                newRow.insertCell(0).innerHTML = `<input class=nameinput name="playerName"></input>`;
+                newRow.insertCell(0).innerHTML = `<input class=nameinput name="playerName">`;
             }
             newRow.cells[0].style.backgroundColor = getRandomColor();
         }
