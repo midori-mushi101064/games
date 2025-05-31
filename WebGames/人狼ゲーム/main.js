@@ -218,18 +218,14 @@ function offline() {
     }
 }
 
-const names =
-    [
-        "たかし", "五条悟", "この世で一番のイケメン",
-        "コバルト", "初期キャラクター", "村人C", "ゴキピクミン",
-        "小動物", "ソラマメ", "破壊神ゼウス", "KO☆NA☆BA☆NA☆NA",
-        "初音ミク", "重音テト", "亞北ネル", "ぬぬぬぬぬぬぬぬぬぬぬぬ",
-        "やまちゃん", "完全体の山田", "三千体の桑田", "エーミール",
-        "吾輩は猫である", "I LOVE YOU", "えっほ、えっほ", "今日ビジュいいじゃん",
-        "ブロリーです", "YAJU&〇", "お前はもう死んでいる", "バトルドーム！",
-        "パフェ、イワシ", "空欄だったから名前記入しといたぜ", "このはげぇ！",
-        "水素の音～♪", "若者をいじめて楽しいか", "やー！パワー！"
-    ];
+function generateRandomName(length = 6) {
+    const chars = "abcdefghijklmnopqrstuvwxyz";
+    let name = "";
+    for (let i = 0; i < length; i++) {
+        name += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return name.charAt(0).toUpperCase() + name.slice(1); // 最初の文字を大文字に
+}
 
 function rangeNames() {
     const table = document.getElementById("peoplenameSet");
@@ -242,15 +238,17 @@ function rangeNames() {
     let n = (rows.length - 2 < total) ? 1 : -1;
     while (rows.length - 2 !== total) {
         if (n == 1) {
-            const newRow = table.insertRow(1);  // 最後に追加
+            const input = document.createElement("input");
             if (document.getElementById("namecheckbox").checked == true) {
-                const name = names[Math.floor(Math.random() * names.length)];
-                newRow.insertCell(0).innerHTML = `<input class=nameinput value="${name}" id="${rows.length + 1}"></input>`;
+                input.className = "nameinput";
+                input.name = "playerName";
+                input.value = generateRandomName();
+            } else {
+                input.className = "nameinput";
+                input.name = "playerName";
             }
-            else {
-                newRow.insertCell(0).innerHTML = `<input class=nameinput id="${rows.length + 1}"></input>`;
-            }
-            newRow.cells[0].style.backgroundColor = getRandomColor();
+            input.style.backgroundColor = getRandomColor();
+            newRow.insertCell(0).appendChild(input);
         }
         else if (rows.length > 2) {
             rows[1].remove();
