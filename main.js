@@ -238,15 +238,17 @@ function rangeNames() {
     let n = (rows.length - 2 < total) ? 1 : -1;
     while (rows.length - 2 !== total) {
         if (n == 1) {
-            const newRow = table.insertRow(1);  // 最後に追加
+            const input = document.createElement("input");
             if (document.getElementById("namecheckbox").checked == true) {
-                //const name = generateRandomName();
-                newRow.insertCell(0).innerHTML = `<input class=nameinput value="kakakaあa" name="playerName">`;
+                input.className = "nameinput";
+                input.name = "playerName";
+                input.value = generateRandomName();
+            } else {
+                input.className = "nameinput";
+                input.name = "playerName";
             }
-            else {
-                newRow.insertCell(0).innerHTML = `<input class=nameinput name="playerName">`;
-            }
-            newRow.cells[0].style.backgroundColor = getRandomColor();
+            input.style.backgroundColor = getRandomColor();
+            newRow.insertCell(0).appendChild(input);
         }
         else if (rows.length > 2) {
             rows[1].remove();
