@@ -4,12 +4,14 @@
 <head>
     <meta charset="UTF-8"> <!-- 文字エンコードの指定（文字化けの予防）-->
     <meta name="description" content="midori-mushi完全自作！ゲーム一覧"> <!-- ページの説明文を検索結果へ反映させる -->
-    <meta property="og:title" content="midori-mushi作のWebゲーム一覧" />
-    <meta property="og:description" content="midori-mushiの完全自作。パソコンをカタカタやって作ったZE☆" />
+    <meta name="viewport" content="user-scalable=no">
+
+    <meta property="og:title" content="人狼ゲーム" />
+    <meta property="og:description" content="色んな役職がある人狼ゲーム" />
     <meta property="og:image" content="https://midori-mushi101064.github.io/games/WebGames/logo.png" />
-    <meta property="og:url" content="https://midori-mushi101064.github.io/games/WebGames/WebHub.html" />
+    <meta property="og:url" content="https://midori-mushi101064.github.io/games/WebGames/人狼ゲーム/main.html" />
     <meta property="og:type" content="website" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <title>midorimushiHub</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -35,12 +37,31 @@
         </label>
     </div>
 
+    <script src="offline.js"></script>
+    <script src="sound.js"></script>
     <header>
-        <h1>midori-mushi_Hub</h1>
+        <h1>人狼ゲーム</h1>
     </header>
-    <p class="center">
-        <img src="logo.png">
-    </p>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="center">
+        <div class="textbox" style="background-color: rgb(221, 109, 109);" id="box">
+        </div>
+    </div>
+    <br>
+    <div class="center">
+        <button onclick="console.log(players,deadPlayers)">開発者用ログ表示</button>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <footer>
         <p>&copy; 2025 midori-mushi</p>
     </footer>

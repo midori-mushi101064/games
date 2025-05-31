@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8"> <!-- 文字エンコードの指定（文字化けの予防）-->
+    <meta name="description" content="色んな役職がある人狼ゲーム"> <!-- ページの説明文を検索結果へ反映させる -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta property="og:title" content="人狼ゲーム" />
+    <meta property="og:description" content="色んな役職がある人狼ゲーム" />
+    <meta property="og:image" content="https://midori-mushi101064.github.io/games/WebGames/logo.png" />
+    <meta property="og:url" content="https://midori-mushi101064.github.io/games/WebGames/人狼ゲーム/main.html" />
+    <meta property="og:type" content="website" />
+
+    <title>midorimushiHub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="menu-container">
+        <input type="checkbox" id="menu-toggle">
+        <nav class="menu">
+            <ul>
+                <li><a href="https://midori-mushi101064.github.io/games/WebGames/WebHub.html"
+                        style="color: rgb(40, 109, 212);">一覧に戻る</a></li>
+                <li><b>ゲーム-------------------------------------------------------</b></li>
+                <li><a href="https://midori-mushi101064.github.io/games/WebGames/バーゲーム/main.html">バーゲーム</a></li>
+                <li><a href="https://midori-mushi101064.github.io/games/WebGames/人狼ゲーム/main.html">人狼ゲーム</a></li>
+                <li><a href="#">爆弾ゲーム(未完成)</a></li>
+                <li><a href="#">ワードウルフ(未完成)</a></li>
+                <li>
+                    <div class="scrrol">
+                        <p style="color: rgb(126, 89, 138);">目次</p>
+                        <a href="#allrolelist" style="color:rgb(210, 146, 230)">役職一覧</a>
+                        <a href="#peopleSeting" style="color:rgb(198, 230, 146)">人数設定</a>
+                        <a href="#roles" style="color: rgb(199, 199, 199);">役職統計</a>
+                        <a href="#blueRole" style="color: rgb(109, 167, 221);">村人陣営</a>
+                        <a href="#redRole" style="color: rgb(221, 109, 109);">人狼陣営</a>
+                        <a href="#greenRole" style="color: rgb(109, 221, 146);">第三陣営</a>
+                        <a href="#orangeRole" style="color: rgb(221, 176, 109);">追加役職</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <label for="menu-toggle" class="menu-button">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </label>
+    </div>
+
+    <div id="page_top"><a href="#"></a></div>
+
+    <header>
+        <h1>人狼ゲーム</h1>
+    </header>
+
+    <script src="main.js"></script>
+    <script src="sound.js"></script>
+    <div class="center">
+        <div class="scrrol">
+            <p style="color: rgb(126, 89, 138);">目次</p>
+            <a href="#allrolelist" style="color:rgb(210, 146, 230)">役職一覧</a>
+            <a href="#peopleSeting" style="color:rgb(198, 230, 146)">人数設定</a>
+            <a href="#roles" style="color: rgb(199, 199, 199);">役職統計</a>
+            <a href="#blueRole" style="color: rgb(109, 167, 221);">村人陣営</a>
+            <a href="#redRole" style="color: rgb(221, 109, 109);">人狼陣営</a>
+            <a href="#greenRole" style="color: rgb(109, 221, 146);">第三陣営</a>
+            <a href="#orangeRole" style="color: rgb(221, 176, 109);">追加役職</a>
+        </div>
+    </div>
+    <div class="center">
+        <button class="join-button" style="background-color: rgb(109, 221, 206);" onclick="offline()">オフラインで始める</button>
+    </div>
+    <br>
+    <div class="center">
+        <button class="join-button" style="background-color: rgb(169, 221, 109);">部屋を作る</button>
+    </div>
+    <br>
+    <div class="center">
+        <button class="join-button" style="background-color: rgb(221, 135, 109);">部屋に参加する</button>
+    </div>
+    <!--役職一覧-->
+    <br>
+    <br>
+    <br>
+    <div class="center">
+        <div class="rolelist">
+            <details id="allrolelist">
+                <summary>役職一覧</summary>
+            </details>
+        </div>
+    </div>
+    <!--人数設定-->
+    <p class="title" style="color: rgb(151, 141, 241);" id="peopleSeting">人数設定</p>
+    <div class="center">
+        <table id="peopleSet">
+            <tr style="background-color: rgb(109, 167, 221);">
+                <td>村人陣営</td>
+                <td>
+                    <div class="number-input">
+                        <button onclick="changeNumber('村人陣営',-1)">-</button>
+                        <input type="number" id="村人陣営" name="陣営" value="0" min="0" onchange="rangeNumber('村人陣営')">
+                        <button onclick="changeNumber('村人陣営',1)">+</button>
+                    </div>
+                </td>
+            </tr>
+            <tr style="background-color: rgb(221, 109, 109);">
+                <td>人狼陣営</td>
+                <td>
+                    <div class="number-input">
+                        <button onclick="changeNumber('人狼陣営',-1)">-</button>
+                        <input type="number" id="人狼陣営" name="陣営" value="0" min="0" onchange="rangeNumber('人狼陣営')">
+                        <button onclick="changeNumber('人狼陣営',1)">+</button>
+                    </div>
+                </td>
+            </tr>
+            <tr style="background-color:  rgb(109, 221, 146);">
+                <td>第三陣営</td>
+                <td>
+                    <div class="number-input">
+                        <button onclick="changeNumber('第三陣営',-1)">-</button>
+                        <input type="number" id="第三陣営" name="陣営" value="0" min="0" onchange="rangeNumber('第三陣営')">
+                        <button onclick="changeNumber('第三陣営',1)">+</button>
+                    </div>
+                </td>
+            </tr>
+            <tr style="background-color:  rgb(199, 199, 199);">
+                <td>合計</td>
+                <td><a id="peopletotal">0人</a></td>
+            </tr>
+        </table>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="center">
+        <table id="peoplenameSet">
+            <tr style="background-color: rgb(199, 199, 199);">
+                <td style="width: 200px;">
+                    <a style="font-size: 22px;">ランダム名付け</a>
+                    <input id="namecheckbox" type="checkbox" class="namecheckbox" checked="true"></input>
+                </td>
+            </tr>
+            <tr style="background-color: rgb(199, 199, 199);">
+                <td>
+                    <a id="peoplenametotal">合計 0 人</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!--役職統計-->
+    <p class="title" style="color:rgb(109, 221, 212);" id="roles">役職一覧</p>
+    <div class="center">
+        <table id="role-blue-List" style="background-color: rgb(109, 167, 221);">
+            <tr>
+                <th>役職</th>
+                <th>人数</th>
+                <th></th>
+            </tr>
+        </table>
+    </div>
+    <div class="center">
+        <table id="role-red-List" style="background-color:  rgb(221, 109, 109);">
+        </table>
+    </div>
+    <div class="center">
+        <table id="role-green-List" style="background-color:rgb(109, 221, 146);">
+        </table>
+    </div>
+    <div class=" center">
+        <table style="background-color: rgb(199, 199, 199);">
+            <tr>
+                <td>合計</td>
+                <td id="total">0人</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+    <p class="title" style="color:rgb(109, 221, 212);" id="roles">追加役職</p>
+    <div class="center">
+        <table id="role-orange-List" style="background-color: rgb(109, 167, 221);">
+            <tr>
+                <th>役職</th>
+                <th>人数</th>
+                <th></th>
+            </tr>
+        </table>
+    </div>
+    <!--村人陣営-->
+    <p class="title" style="color: rgb(109, 167, 221);" id="blueRole">村人陣営</p>
+    <p class="sub-title" style="color: rgb(109, 167, 221);">協力し合って村から人狼を追放しよう。</p>
+
+    <div class="center">
+        <p class="role-blue" id="村人タイトル">村人</p>
+    </div>
+    <div class="center">
+        <p class="role-details">普通の人。特殊能力はない。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('村人',-1)">-</button>
+        <input type="number" id="村人" name="村人陣営" value="0" min="0" onchange="rangeNumber('村人')">
+        <button onclick="changeNumber('村人',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="占い師タイトル">占い師</p>
+    </div>
+    <div class="center">
+        <p class="role-details">毎晩一人を占い、人間か人外かを確認できる</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('占い師',-1)">-</button>
+        <input type="number" id="占い師" name="村人陣営" value="0" min="0" onchange="rangeNumber('占い師')">
+        <button onclick="changeNumber('占い師',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="霊媒師タイトル">霊媒師</p>
+    </div>
+    <div class="center">
+        <p class="role-details">毎晩一人死亡者が人間か人外かを確認できる。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('霊媒師',-1)">-</button>
+        <input type="number" id="霊媒師" name="村人陣営" value="0" min="0" onchange="rangeNumber('霊媒師')">
+        <button onclick="changeNumber('霊媒師',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="狩人タイトル">狩人</p>
+    </div>
+    <div class="center">
+        <p class="role-details">毎晩一人を奇襲から守ることができる。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('狩人',-1)">-</button>
+        <input type="number" id="狩人" name="村人陣営" value="0" min="0" onchange="rangeNumber('狩人')">
+        <button onclick="changeNumber('狩人',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="パン屋タイトル">パン屋</p>
+    </div>
+    <div class="center">
+        <p class="role-details">生きているなら毎朝「パンが焼きあがった」というメッセージが出る。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('パン屋',-1)">-</button>
+        <input type="number" id="パン屋" name="村人陣営" value="0" min="0" max="1" onchange="rangeNumber('パン屋')">
+        <button onclick="changeNumber('パン屋',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="ナイス猫又タイトル">ナイス猫又</p>
+    </div>
+    <div class="center">
+        <p class="role-details">追放されると一人道連れにする。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('ナイス猫又',-1)">-</button>
+        <input type="number" id="ナイス猫又" name="村人陣営" value="0" min="0" onchange="rangeNumber('ナイス猫又')">
+        <button onclick="changeNumber('ナイス猫又',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="シェリフタイトル">シェリフ</p>
+    </div>
+    <div class="center">
+        <p class="role-details">村人陣営なのに殺害能力を持つ。<br>奇襲した相手が村人陣営なら自身が死ぬ。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('シェリフ',-1)">-</button>
+        <input type="number" id="シェリフ" name="村人陣営" value="0" min="0" onchange="rangeNumber('シェリフ')">
+        <button onclick="changeNumber('シェリフ',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="エセ占い師タイトル">エセ占い師</p>
+    </div>
+    <div class="center">
+        <p class="role-details">自身の役職は占い師と表示される。<br>占いの結果が全てでたらめ。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('エセ占い師',-1)">-</button>
+        <input type="number" id="エセ占い師" name="村人陣営" value="0" min="0" onchange="rangeNumber('エセ占い師')">
+        <button onclick="changeNumber('エセ占い師',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="狼憑きタイトル">狼憑き</p>
+    </div>
+    <div class="center">
+        <p class="role-details">村人陣営だが占われたら人外と出る。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('狼憑き',-1)">-</button>
+        <input type="number" id="狼憑き" name="村人陣営" value="0" min="0" onchange="rangeNumber('狼憑き')">
+        <button onclick="changeNumber('狼憑き',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="巫女タイトル">巫女</p>
+    </div>
+    <div class="center">
+        <p class="role-details">昨日会議で死んだ人が人狼か分かる。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('巫女',-1)">-</button>
+        <input type="number" id="巫女" name="村人陣営" value="0" min="0" onchange="rangeNumber('巫女')">
+        <button onclick="changeNumber('巫女',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="タフガイタイトル">タフガイ</p>
+    </div>
+    <div class="center">
+        <p class="role-details">奇襲されても次の会議まで生き残る</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('タフガイ',-1)">-</button>
+        <input type="number" id="タフガイ" name="村人陣営" value="0" min="0" onchange="rangeNumber('タフガイ')">
+        <button onclick="changeNumber('タフガイ',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="シールダータイトル">シールダー</p>
+    </div>
+    <div class="center">
+        <p class="role-details">三回だけ自身を奇襲から守ることができる。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('シールダー',-1)">-</button>
+        <input type="number" id="シールダー" name="村人陣営" value="0" min="0" onchange="rangeNumber('シールダー')">
+        <button onclick="changeNumber('シールダー',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="早起きタイトル">早起き</p>
+    </div>
+    <div class="center">
+        <p class="role-details">一度だけ次の夜をスキップできる。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('早起き',-1)">-</button>
+        <input type="number" id="早起き" name="村人陣営" value="0" min="0" onchange="rangeNumber('早起き')">
+        <button onclick="changeNumber('早起き',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="ゆうれいタイトル">ゆうれい</p>
+    </div>
+    <div class="center">
+        <p class="role-details">生きていても人数にカウントされない。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('ゆうれい',-1)">-</button>
+        <input type="number" id="ゆうれい" name="村人陣営" value="0" min="0" onchange="rangeNumber('ゆうれい')">
+        <button onclick="changeNumber('ゆうれい',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="デッドホップタイトル">デッドホップ</p>
+    </div>
+    <div class="center">
+        <p class="role-details">死んでいても人数としてカウントされる。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('デッドホップ',-1)">-</button>
+        <input type="number" id="デッドホップ" name="村人陣営" value="0" min="0" onchange="rangeNumber('デッドホップ')">
+        <button onclick="changeNumber('デッドホップ',1)">+</button>
+    </div>
+
+    <!--人狼陣営-->
+    <p class="title" style="color: rgb(221, 109, 109);" id="redRole">人狼陣営</p>
+    <p class="sub-title" style="color: rgb(221, 109, 109);">村人を奇襲して村を壊滅させよう。</p>
+
+    <div class="center">
+        <p class="role-red" id="人狼タイトル">人狼</p>
+    </div>
+    <div class="center">
+        <p class="role-details">毎晩村人陣営を奇襲できる。<br>村人陣営を全滅させたら勝ち。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('人狼',-1)">-</button>
+        <input type="number" id="人狼" name="人狼陣営" value="0" min="0" onchange="rangeNumber('人狼')">
+        <button onclick="changeNumber('人狼',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-red" id="猫又タイトル">猫又</p>
+    </div>
+    <div class="center">
+        <p class="role-details">追放されると一人道連れにする。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('猫又',-1)">-</button>
+        <input type="number" id="猫又" name="人狼陣営" value="0" min="0" onchange="rangeNumber('猫又')">
+        <button onclick="changeNumber('猫又',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-red" id="狂人タイトル">狂人</p>
+    </div>
+    <div class="center">
+        <p class="role-details">占っても人間と出る人狼の味方。<br>狂人は人狼が分かるが、人狼は狂人がわからない。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('狂人',-1)">-</button>
+        <input type="number" id="狂人" name="人狼陣営" value="0" min="0" onchange="rangeNumber('狂人')">
+        <button onclick="changeNumber('狂人',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-red" id="ダブルキラータイトル">ダブルキラー</p>
+    </div>
+    <div class="center">
+        <p class="role-details">一夜に二人奇襲できる。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('ダブルキラー',-1)">-</button>
+        <input type="number" id="ダブルキラー" name="人狼陣営" value="0" min="0" onchange="rangeNumber('ダブルキラー')">
+        <button onclick="changeNumber('ダブルキラー',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-red" id="イビルゲッサータイトル">イビルゲッサー</p>
+    </div>
+    <div class="center">
+        <p class="role-details">役職を当てれば一夜に何度でも防御を無視して殺害できる。<br>外すと自身が死ぬ。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('イビルゲッサー',-1)">-</button>
+        <input type="number" id="イビルゲッサー" name="人狼陣営" value="0" min="0" onchange="rangeNumber('イビルゲッサー')">
+        <button onclick="changeNumber('イビルゲッサー',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-red" id="自爆魔タイトル">自爆魔</p>
+    </div>
+    <div class="center">
+        <p class="role-details">隣の人を殺害しつつ自分も死ぬ。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('自爆魔',-1)">-</button>
+        <input type="number" id="自爆魔" name="人狼陣営" value="0" min="0" onchange="rangeNumber('自爆魔')">
+        <button onclick="changeNumber('自爆魔',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-red" id="ヴァンパイアタイトル">ヴァンパイア</p>
+    </div>
+    <div class="center">
+        <p class="role-details">奇襲した相手は会議の最中に死ぬ。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('ヴァンパイア',-1)">-</button>
+        <input type="number" id="ヴァンパイア" name="人狼陣営" value="0" min="0" onchange="rangeNumber('ヴァンパイア')">
+        <button onclick="changeNumber('ヴァンパイア',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-red" id="スキッパータイトル">スキッパー</p>
+    </div>
+    <div class="center">
+        <p class="role-details">一度だけ次の会議をスキップできる。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('スキッパー',-1)">-</button>
+        <input type="number" id="スキッパー" name="人狼陣営" value="0" min="0" onchange="rangeNumber('スキッパー')">
+        <button onclick="changeNumber('スキッパー',1)">+</button>
+    </div>
+
+    <!--第三陣営-->
+    <p class="title" style="color:rgb(109, 221, 146);" id="greenRole">第三陣営</p>
+    <p class="sub-title" style="color:rgb(109, 221, 146);">能力を駆使して、単独で勝利を目指せ。</p>
+
+    <div class="center">
+        <p class="role-green" id="妖狐タイトル" style="
+    background-color: rgb(180, 109, 221);">妖狐</p>
+    </div>
+    <div class="center">
+        <p class="role-details">奇襲では死なないが占われたら死ぬ。<br>最後まで生き残れば勝ち。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('妖狐',-1)">-</button>
+        <input type="number" id="妖狐" name="第三陣営" value="0" min="0" max="50" onchange="rangeNumber('妖狐')">
+        <button onclick="changeNumber('妖狐',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-green" id="神タイトル" style="
+    background-color: rgb(219, 221, 109);">神</p>
+    </div>
+    <div class="center">
+        <p class="role-details">全員の役職が分かる。<br>最後まで生き残れば勝ち。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('神',-1)">-</button>
+        <input type="number" id="神" name="第三陣営" value="0" min="0" max="50" onchange="rangeNumber('神')">
+        <button onclick="changeNumber('神',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-green" id="ともにゃんタイトル" style="
+    background-color: rgb(98, 240, 84);">ともにゃん</p>
+    </div>
+    <div class="center">
+        <p class="role-details">守たら死ぬ。奇襲では死なない。<br>3ターン目以降は役職が全員にばれてしまう。<br>最後まで生き残れば勝ち。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('ともにゃん',-1)">-</button>
+        <input type="number" id="ともにゃん" name="第三陣営" value="0" min="0" max="50" onchange="rangeNumber('ともにゃん')">
+        <button onclick="changeNumber('ともにゃん',1)">+</button>
+    </div>
+    <div class="center">
+        <p class="role-green" id="ラベラータイトル" style="
+    background-color: rgb(131, 63, 108);">ラベラー</p>
+    </div>
+    <div class="center">
+        <p class="role-details">陣営がランダムな色で分けられる。<br>毎晩一人の色を見れる。最後まで生き残れば勝ち。</p>
+    </div>
+
+    <div class="number-input">
+        <button onclick="changeNumber('ラベラー',-1)">-</button>
+        <input type="number" id="ラベラー" name="第三陣営" value="0" min="0" max="50" step="1" onchange="rangeNumber('ラベラー')">
+        <button onclick="changeNumber('ラベラー',1)">+</button>
+    </div>
+    <div class="center">
+
+        <p class="role-green" id="口封じタイトル" style="
+    background-color: rgb(163, 54, 185);">口封じ</p>
+    </div>
+    <div class="center">
+        <p class="role-details">毎晩誰かを呪って次の会議で喋れなくさせる。<br>最後まで生き残れば勝ち。</p>
+    </div>
+
+    <div class="number-input">
+        <button onclick="changeNumber('口封じ',-1)">-</button>
+        <input type="number" id="口封じ" name="第三陣営" value="0" min="0" max="50" step="1" onchange="rangeNumber('口封じ')">
+        <button onclick="changeNumber('口封じ',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-green" id="コウモリタイトル" style="
+    background-color: rgb(78, 69, 131);">コウモリ</p>
+    </div>
+    <div class="center">
+        <p class="role-details">人狼と村人の陣営を行き来して有利な方になれる。<br>最後まで生き残れば勝ち。</p>
+    </div>
+
+    <div class="number-input">
+        <button onclick="changeNumber('コウモリ',-1)">-</button>
+        <input type="number" id="コウモリ" name="第三陣営" value="0" min="0" max="50" step="1" onchange="rangeNumber('コウモリ')">
+        <button onclick="changeNumber('コウモリ',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-green" id="吊り人タイトル" style="
+    background-color: rgb(69, 131, 102);">吊り人</p>
+    </div>
+    <div class="center">
+        <p class="role-details">会議で追放されれば勝ち。</p>
+    </div>
+
+    <div class="number-input">
+        <button onclick="changeNumber('吊り人',-1)">-</button>
+        <input type="number" id="吊り人" name="第三陣営" value="0" min="0" max="50" step="1" onchange="rangeNumber('吊り人')">
+        <button onclick="changeNumber('吊り人',1)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-green" id="彼岸花タイトル" style="
+    background-color: rgb(78, 69, 131);">彼岸花</p>
+    </div>
+    <div class="center">
+        <p class="role-details">毎晩一人に呪いをかけれる。呪われた人は次の夜に死ぬ。<br>呪いがかかっている人はアイコンに彼岸花がつく。</p>
+    </div>
+
+    <div class="number-input">
+        <button onclick="changeNumber('彼岸花',-1)">-</button>
+        <input type="number" id="彼岸花" name="第三陣営" value="0" min="0" max="50" step="1" onchange="rangeNumber('彼岸花')">
+        <button onclick="changeNumber('彼岸花',1)">+</button>
+    </div>
+
+    <!--追加役職-->
+    <p class="title" style="color:rgb(221, 176, 109);" id="orangeRole">追加役職</p>
+    <p class="sub-title" style="color:rgb(221, 176, 109);">能力に加えて使える能力を駆使しよう。</p>
+
+    <div class="center">
+        <p class="role-green" id="ラバーズタイトル" style="
+    background-color: rgb(235, 134, 201);">ラバーズ</p>
+    </div>
+    <div class="center">
+        <p class="role-details">互い協力し合って生き残れ。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('ラバーズ',-2)">-</button>
+        <input type="number" id="ラバーズ" name="追加役職" value="0" min="0" max="50" step="2" onchange="rangeNumber('ラバーズ')">
+        <button onclick="changeNumber('ラバーズ',2)">+</button>
+    </div>
+
+    <div class="center">
+        <p class="role-blue" id="ネコ化タイトル">ネコ化</p>
+    </div>
+    <div class="center">
+        <p class="role-details">ゲーム中は猫語で話さないといけない。</p>
+    </div>
+    <div class="number-input">
+        <button onclick="changeNumber('ネコ化',-1)">-</button>
+        <input type="number" id="ネコ化" name="追加役職" value="0" min="0" onchange="rangeNumber('ネコ化')">
+        <button onclick="changeNumber('ネコ化',1)">+</button>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <footer>
+        <p>&copy; 2025 midori-mushi</p>
+    </footer>
+</body>
+
+</html>
