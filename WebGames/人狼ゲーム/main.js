@@ -191,7 +191,7 @@ function offline() {
 
     let isOk = true;
 
-    if (roleNum[0] > peoples[0] || roleNum[1] > peoples[1].value || roleNum[2] > peoples[2].value) {
+    if (roleNum[0] < peoples[0] || roleNum[1] < peoples[1].value || roleNum[2] < peoples[2].value) {
         isOk = false;
     }
 
@@ -205,8 +205,8 @@ function offline() {
         let text = "";
         if (!isOk) {
             if (roleNum[0] < peoples[0]) text += " 村人陣営 ";
-            if (roleNum[1] < peoples[1].value) text += " 人狼陣営 ";
-            if (roleNum[2] < peoples[2].value) text += " 第三陣営 ";
+            if (roleNum[1] < peoples[1]) text += " 人狼陣営 ";
+            if (roleNum[2] < peoples[2]) text += " 第三陣営 ";
             alert(`${text}の役職の人数が足りません`);
         }
         else {
