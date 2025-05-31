@@ -218,13 +218,42 @@ function offline() {
     }
 }
 
-function generateRandomName(length = 6) {
-    const chars = "abcdefghijklmnopqrstuvwxyz";
-    let name = "";
-    for (let i = 0; i < length; i++) {
-        name += chars.charAt(Math.floor(Math.random() * chars.length));
+const names =
+    [
+        "たかし", "五条悟", "この世で一番のイケメン",
+        "コバルト", "初期キャラクター", "村人C", "ゴキピクミン",
+        "小動物", "ソラマメ", "破壊神ゼウス", "KO☆NA☆BA☆NA☆NA",
+        "初音ミク", "重音テト", "亞北ネル", "ぬぬぬぬぬぬぬぬぬぬぬぬ",
+        "やまちゃん", "完全体の山田", "三千体の桑田", "エーミール",
+        "吾輩は猫である", "I LOVE YOU", "えっほ、えっほ", "今日ビジュいいじゃん",
+        "ブロリーです", "YAJU&〇", "お前はもう死んでいる", "バトルドーム！",
+        "パフェ、イワシ", "空欄だったから名前記入しといたぜ", "このはげぇ！",
+        "水素の音～♪", "若者をいじめて楽しいか", "やー！パワー！"
+    ];
+const firstParts = ["ミ", "カ", "ユ", "ア", "ソ", "ナ", "レ", "フ", "/", "*"];
+const middleParts = ["ン", "ラ", "リ", "キ", "ズ", "ト", "グ", "ド", "・", "*"];
+const lastParts = ["タ", "ル", "ス", "ノ", "ン", "ア", "ミ", "オ", "☆", "*"];
+
+function generateFantasyName() {
+    let name = '';
+    name += firstParts[Math.floor(Math.random() * firstParts.length)];
+    name += middleParts[Math.floor(Math.random() * middleParts.length)];
+    name += lastParts[Math.floor(Math.random() * lastParts.length)];
+    let Num = (Math.floor(Math.random() * 2) == 0) ? Math.floor(Math.random() * 5) : 0;
+    for (let i = 0; i < Num; i++) {
+        switch (Math.floor(Math.random() * 3)) {
+            case 0:
+                name += firstParts[Math.floor(Math.random() * firstParts.length)];
+                break;
+            case 1:
+                name += middleParts[Math.floor(Math.random() * middleParts.length)];
+                break;
+            case 2:
+                name += lastParts[Math.floor(Math.random() * lastParts.length)];
+                break;
+        }
     }
-    return name.charAt(0).toUpperCase() + name.slice(1); // 最初の文字を大文字に
+    return name;
 }
 
 function rangeNames() {
@@ -240,8 +269,14 @@ function rangeNames() {
         if (n == 1) {
             const newRow = table.insertRow(1);  // 最後に追加
             if (document.getElementById("namecheckbox").checked == true) {
-                //const name = generateRandomName();
-                newRow.insertCell(0).innerHTML = `<input class=nameinput value="kakakaあa" name="playerName">`;
+                let name
+                if (Math.floor(Math.random() * 20) == 0) {
+                    name = names[Math.floor(Math.random() * names.length)];
+                }
+                else {
+                    name = generateFantasyName();
+                }
+                newRow.insertCell(0).innerHTML = `<input class=nameinput value="${name}" name="playerName">`;
             }
             else {
                 newRow.insertCell(0).innerHTML = `<input class=nameinput name="playerName">`;
