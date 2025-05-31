@@ -14,9 +14,10 @@ function rangeNumber(id) {
     const input = document.getElementById(id);
     input.value = Math.floor(input.value);
     const min = parseInt(input.min) || 0;
-    const max = parseInt(input.max) || NaN;
-    if (input.value < min) input.value = min;
-    if (input.value > max) input.value = max;
+    const max = parseInt(input.max) || Infinity;
+    const value = parseInt(input.value, 10);
+    if (value < min) input.value = min;
+    if (value > max) input.value = max;
 
     if (input.name == "追加役職") {
         changeRoleList(id);
@@ -190,7 +191,7 @@ function offline() {
 
     let isOk = true;
 
-    if (roleNum[0] > peoples[0].value || roleNum[1] > peoples[1].value || roleNum[2] > peoples[2].value) {
+    if (roleNum[0] > peoples[0] || roleNum[1] > peoples[1].value || roleNum[2] > peoples[2].value) {
         isOk = false;
     }
 
@@ -203,7 +204,7 @@ function offline() {
     else {
         let text = "";
         if (!isOk) {
-            if (roleNum[0] < peoples[0].value) text += " 村人陣営 ";
+            if (roleNum[0] < peoples[0]) text += " 村人陣営 ";
             if (roleNum[1] < peoples[1].value) text += " 人狼陣営 ";
             if (roleNum[2] < peoples[2].value) text += " 第三陣営 ";
             alert(`${text}の役職の人数が足りません`);
@@ -244,10 +245,10 @@ function rangeNames() {
             const newRow = table.insertRow(1);  // 最後に追加
             if (document.getElementById("namecheckbox").checked == true) {
                 const name = names[Math.floor(Math.random() * names.length)];
-                newRow.insertCell(0).innerHTML = `<input class=nameinput value="${name}" ></input>`;
+                newRow.insertCell(0).innerHTML = `<input class=nameinput value="${name}" id="${rows.length + 1}"></input>`;
             }
             else {
-                newRow.insertCell(0).innerHTML = `<input class=nameinput ></input>`;
+                newRow.insertCell(0).innerHTML = `<input class=nameinput id="${rows.length + 1}"></input>`;
             }
             newRow.cells[0].style.backgroundColor = getRandomColor();
         }
