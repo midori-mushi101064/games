@@ -240,8 +240,8 @@ function rangeNames() {
         if (n == 1) {
             const newRow = table.insertRow(1);  // 最後に追加
             if (document.getElementById("namecheckbox").checked == true) {
-                const name = generateRandomName();
-                newRow.insertCell(0).innerHTML = `<input class=nameinput value="${name}" name="playerName">`;
+                //const name = generateRandomName();
+                newRow.insertCell(0).innerHTML = `<input class=nameinput value="kakakaあa" name="playerName">`;
             }
             else {
                 newRow.insertCell(0).innerHTML = `<input class=nameinput name="playerName">`;
