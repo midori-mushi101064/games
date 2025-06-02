@@ -60,6 +60,8 @@ let skip;
 
 let gameTurn;
 
+let killedPlayerNum;
+
 function gameStart() {
     sound('sounds/redWin.mp3', 'stop');
     sound('sounds/blueWin.mp3', 'stop');
@@ -270,7 +272,7 @@ function myTurn(n = 1) {
                 break;
             case '占い師':
                 if (myturnNum == 1) {
-                    meeting(true, `<a>誰か一人、生存者の陣営を占えます</a><br><a>占いたい人を選択してください</a>`, `<button onclick='myTurn();'>占う</button>`, turn);
+                    meeting(true, `<a>誰か一人、生存者の陣営を占えます</a><br><a>占いたい人を選択してください</a>`, `<button onclick='myTurn();'>占う</button>`, turn, killedPlayerNum);
                 }
                 else if (myturnNum == 2) {
                     const n = document.querySelector('input[name="kill"]:checked').value;
@@ -282,6 +284,7 @@ function myTurn(n = 1) {
                             let kill = { Num: n, type: '自殺', fromNum: n };
                             shinuyotei.push(kill);
                         }
+                        killedPlayerNum.push(n);
                     }
                     else {
                         box.style.backgroundColor = "rgb(119, 164, 248)";
@@ -294,7 +297,7 @@ function myTurn(n = 1) {
                 break;
             case '霊媒師':
                 if (myturnNum == 1) {
-                    deadPlayersMeeting(true, `<a>誰か一人、死者の陣営を占えます</a><br><a>占いたい人を選択してください</a>`, `<button onclick='myTurn();'>占う</button>`, turn);
+                    deadPlayersMeeting(true, `<a>誰か一人、死者の陣営を占えます</a><br><a>占いたい人を選択してください</a>`, `<button onclick='myTurn();'>占う</button>`, turn, killedPlayerNum);
                 }
                 else if (myturnNum == 2) {
                     const n = document.querySelector('input[name="dead"]:checked').value;
@@ -302,6 +305,7 @@ function myTurn(n = 1) {
                         const p = deadPlayers[n];
                         box.style.backgroundColor = typeCheck(p).color;
                         sethtml(`<a>${p.name}</a><br><a>の陣営は</a><br><a style='font-size: 50px;'>${typeCheck(p).type}</a><br><button onclick='myTurn();'>りょーかい！</button>`);
+                        killedPlayerNum.push(n);
                     }
                     else {
                         box.style.backgroundColor = "rgb(119, 164, 248)";
@@ -314,13 +318,14 @@ function myTurn(n = 1) {
                 break;
             case '狩人':
                 if (myturnNum == 1) {
-                    meeting(true, `<a>誰か一人の死を守れます</a><br><a>守りたい人を選択してください</a>`, `<button onclick='myTurn();'>守る</button>`, turn);
+                    meeting(true, `<a>誰か一人の死を守れます</a><br><a>守りたい人を選択してください</a>`, `<button onclick='myTurn();'>守る</button>`, turn, killedPlayerNum);
                 }
                 else if (myturnNum == 2) {
                     const n = document.querySelector('input[name="kill"]:checked').value;
                     if (n !== 'skip') {
                         const p = players[n];
                         mamorareru.push(n);
+                        killedPlayerNum.push(n);
                         sethtml(`<a>今夜、</a><br><a style='font-size: 50px;'>${p.name}</a><br><a>は人狼の奇襲から守られます</a><br><button onclick='myTurn();'>りょーかい！</button>`);
                     }
                     else {
@@ -340,7 +345,7 @@ function myTurn(n = 1) {
                 break;
             case 'シェリフ':
                 if (myturnNum == 1) {
-                    meeting(true, `<a>誰か一人を奇襲できます</a><br><a>人外だと思う人を選択してください</a>`, `<button onclick='myTurn();'>お仕置き</button>`, turn);
+                    meeting(true, `<a>誰か一人を奇襲できます</a><br><a>人外だと思う人を選択してください</a>`, `<button onclick='myTurn();'>お仕置き</button>`, turn, killedPlayerNum);
                 }
                 else if (myturnNum == 2) {
                     const n = document.querySelector('input[name="kill"]:checked').value;
@@ -350,6 +355,7 @@ function myTurn(n = 1) {
                         sethtml(`<a>今夜、</a><br><a style='font-size: 50px;'>${p.name}</a><br><a>を奇襲しました</a><br><button onclick='myTurn();'>りょーかい！</button>`);
                         let kill = { Num: n, type: 'シェリフ', fromNum: turn };
                         shinuyotei.push(kill);
+                        killedPlayerNum.push(n);
                     }
                     else {
                         box.style.backgroundColor = "rgb(119, 164, 248)";
@@ -362,7 +368,7 @@ function myTurn(n = 1) {
                 break;
             case 'エセ占い師':
                 if (myturnNum == 1) {
-                    meeting(true, `<a>誰か一人、生存者の陣営を占えます</a><br><a>占いたい人を選択してください</a>`, `<button onclick='myTurn();'>占う</button>`, turn);
+                    meeting(true, `<a>誰か一人、生存者の陣営を占えます</a><br><a>占いたい人を選択してください</a>`, `<button onclick='myTurn();'>占う</button>`, turn, killedPlayerNum);
                 }
                 else if (myturnNum == 2) {
                     const n = document.querySelector('input[name="kill"]:checked').value;
@@ -381,6 +387,7 @@ function myTurn(n = 1) {
                             box.style.backgroundColor = typeCheck(r).color;
                             sethtml(`<a>${p.name}</a><br><a>の陣営は</a><br><a style='font-size: 50px;'>${r}</a><br><button onclick='myTurn();'>りょーかい！</button>`);
                         }
+                        killedPlayerNum.push(n);
                     }
                     else {
                         box.style.backgroundColor = "rgb(119, 164, 248)";
@@ -452,7 +459,7 @@ function myTurn(n = 1) {
             case '人狼':
                 box.style.backgroundColor = "rgb(221, 109, 109)";
                 if (myturnNum == 1) {
-                    meeting(true, `<a>誰か一人、奇襲を行えます</a><br><a>奇襲したい人を選択してください</a>`, `<button onclick='myTurn();'>奇襲</button>`, turn);
+                    meeting(true, `<a>誰か一人、奇襲を行えます</a><br><a>奇襲したい人を選択してください</a>`, `<button onclick='myTurn();'>奇襲</button>`, turn, killedPlayerNum);
                 }
                 else if (myturnNum == 2) {
                     const n = document.querySelector('input[name="kill"]:checked').value;
@@ -461,6 +468,7 @@ function myTurn(n = 1) {
                         sethtml(`<a>今夜、</a><br><a style='font-size: 50px;'>${p.name}</a><br><a>を奇襲しました</a><br><button onclick='myTurn();'>りょーかい！</button>`);
                         let kill = { Num: n, type: '人狼陣営', fromNum: turn };
                         shinuyotei.push(kill);
+                        killedPlayerNum.push(n);
                     }
                     else {
                         box.style.backgroundColor = "rgb(119, 164, 248)";
@@ -480,7 +488,7 @@ function myTurn(n = 1) {
             case 'ダブルキラー':
                 box.style.backgroundColor = "rgb(221, 109, 109)";
                 if (myturnNum == 1) {
-                    meeting(true, `<a>誰か一人、奇襲を行えます</a><br><a>奇襲したい人を選択してください</a>`, `<button onclick='myTurn();'>奇襲</button>`, turn);
+                    meeting(true, `<a>誰か一人、奇襲を行えます</a><br><a>奇襲したい人を選択してください</a>`, `<button onclick='myTurn();'>奇襲</button>`, turn, killedPlayerNum);
                 }
                 else if (myturnNum == 2) {
                     const n = document.querySelector('input[name="kill"]:checked').value;
@@ -489,6 +497,7 @@ function myTurn(n = 1) {
                         sethtml(`<a>今夜、</a><br><a style='font-size: 50px;'>${p.name}</a><br><a>を奇襲しました</a><br><button onclick='myTurn();'>りょーかい！</button>`);
                         let kill = { Num: n, type: '人狼陣営', fromNum: turn };
                         shinuyotei.push(kill);
+                        killedPlayerNum.push(n);
                     }
                     else {
                         box.style.backgroundColor = "rgb(119, 164, 248)";
@@ -496,7 +505,7 @@ function myTurn(n = 1) {
                     }
                 }
                 else if (myturnNum == 3) {
-                    meeting(true, `<a>誰か一人、奇襲を行えます</a><br><a>奇襲したい人を選択してください</a>`, `<button onclick='myTurn();'>奇襲</button>`, turn);
+                    meeting(true, `<a>誰か一人、奇襲を行えます</a><br><a>奇襲したい人を選択してください</a>`, `<button onclick='myTurn();'>奇襲</button>`, turn, killedPlayerNum);
                 }
                 else if (myturnNum == 4) {
                     const n = document.querySelector('input[name="kill"]:checked').value;
@@ -505,6 +514,7 @@ function myTurn(n = 1) {
                         sethtml(`<a>今夜、</a><br><a style='font-size: 50px;'>${p.name}</a><br><a>を奇襲しました</a><br><button onclick='nextTurn();'>りょーかい！</button>`);
                         let kill = { Num: n, type: 'ダブルキラー', fromNum: turn };
                         shinuyotei.push(kill);
+                        killedPlayerNum.push(n);
                     }
                     else {
                         box.style.backgroundColor = "rgb(119, 164, 248)";
@@ -515,7 +525,7 @@ function myTurn(n = 1) {
             case 'イビルゲッサー':
                 box.style.backgroundColor = "rgb(221, 109, 109)";
                 if (myturnNum == 1) {
-                    meeting(true, `<a>誰か一人、役職あてを行えます</a><br><a>役職当てが成功すると殺害できます</a><br><a>失敗すると逆に自分が死んでしまいます</a><br><a>役職当てを行う相手を選択してください</a>`, `<button onclick='myTurn();'>選択</button>`, turn);
+                    meeting(true, `<a>誰か一人、役職あてを行えます</a><br><a>役職当てが成功すると殺害できます</a><br><a>失敗すると逆に自分が死んでしまいます</a><br><a>役職当てを行う相手を選択してください</a>`, `<button onclick='myTurn();'>選択</button>`, turn, killedPlayerNum);
                 }
                 else if (myturnNum == 2) {
                     const n = document.querySelector('input[name="kill"]:checked').value;
@@ -538,6 +548,7 @@ function myTurn(n = 1) {
                         sethtml(`<a style='font-size: 50px;'>役職あて成功！</a><br><a>役職当てを続けますか？</a><br><button onclick='myTurn();'>続ける</button><br><button onclick='nextTurn();'>やめる</button>`);
                         let kill = { Num: pNum, type: 'イビルゲッサー', fromNum: turn };
                         shinuyotei.push(kill);
+                        killedPlayerNum.push(pNum);
                     }
                     else {
                         sethtml(`<a style='font-size: 50px;'>役職あて失敗！</a><br><a>あなたは死にます</a><br><button onclick='nextTurn();'>りょーかい！</button>`);
@@ -549,7 +560,7 @@ function myTurn(n = 1) {
             case 'ヴァンパイア':
                 box.style.backgroundColor = "rgb(221, 109, 109)";
                 if (myturnNum == 1) {
-                    meeting(true, `<a>誰か一人の血を吸えます</a><br><a>血を吸われた人は次の会議の最中に死にます</a><br><a>血を吸いたい人を選択してください</a>`, `<button onclick='myTurn();'>血を吸う</button>`, turn);
+                    meeting(true, `<a>誰か一人の血を吸えます</a><br><a>血を吸われた人は次の会議の最中に死にます</a><br><a>血を吸いたい人を選択してください</a>`, `<button onclick='myTurn();'>血を吸う</button>`, turn, killedPlayerNum);
                 }
                 else if (myturnNum == 2) {
                     const n = document.querySelector('input[name="kill"]:checked').value;
@@ -558,6 +569,7 @@ function myTurn(n = 1) {
                         sethtml(`<a>今夜、</a><br><a style='font-size: 50px;'>${p.name}</a><br><a>の血を吸いました</a><br><button onclick='nextTurn();'>りょーかい！</button>`);
                         let kill = { Num: n, type: 'ヴァンパイア', fromNum: turn };
                         shinuyotei.push(kill);
+                        killedPlayerNum.push(n);
                     }
                     else {
                         box.style.backgroundColor = "rgb(119, 164, 248)";
@@ -582,7 +594,7 @@ function myTurn(n = 1) {
                 break;
             case '自爆魔':
                 if (myturnNum == 1) {
-                    meeting(false, `<a>自爆しますか？</a><br><a>自爆したら番号が上下の人</a><br><a>二人を巻き込んで自分も死にます</a>`, `<button onclick='myTurn();'>自爆！！</button><button onclick='myTurn(2);'>自爆しない</button>`, turn);
+                    meeting(false, `<a>自爆しますか？</a><br><a>自爆したら番号が上下の人</a><br><a>二人を巻き込んで自分も死にます</a>`, `<button onclick='myTurn();'>自爆！！</button><button onclick='myTurn(2);'>自爆しない</button>`, turn, killedPlayerNum);
                 }
                 else if (myturnNum == 2) {
                     waitRundom();
@@ -622,7 +634,7 @@ function myTurn(n = 1) {
     }
 }
 
-function meeting(checkBox = false, tophtml = 0, bottomhtml = 0, fromNum = null) {
+function meeting(checkBox = false, tophtml = 0, bottomhtml = 0, fromNum = null, killedPlayer = []) {
     let text = ``;
     if (tophtml !== 0) {
         text = `${tophtml}<br>`;
@@ -630,39 +642,45 @@ function meeting(checkBox = false, tophtml = 0, bottomhtml = 0, fromNum = null) 
     text += `<table id=meeting>`;
     let n = 0;
     for (let i = 0; i < players.length; i++) {
-        if (fromNum !== i) {
-            const p = players[i];
-            let color = (n % 2 === 0 ? "rgb(151, 231, 211)" : "rgb(111, 155, 221)");
-            text += `
+        if (!killedPlayer.includes(i)) {
+            if (fromNum !== i) {
+                const p = players[i];
+                let color = (n % 2 === 0 ? "rgb(151, 231, 211)" : "rgb(111, 155, 221)");
+                text += `
         <tr style="background-color: ${color}">
         `;
-            if (checkBox) {
-                text += `
+                if (checkBox) {
+                    text += `
         <td style="width:60px">
         <input type="radio" name="kill" value="${i}" class="meetinginput"></input>
         </td>
         `;
 
-            }
-            text += `
+                }
+                text += `
         <td>
         <a style="width:150px">${p.name}</a>
         </td>
         <tr>
         `;
-        }
-        else {
-            let color = (n % 2 === 0 ? "rgb(231, 151, 227)" : "rgb(177, 111, 221)");
-            text += `
+            }
+            else {
+                let color = (n % 2 === 0 ? "rgb(231, 151, 227)" : "rgb(177, 111, 221)");
+                text += `
         <tr style="background-color: ${color}">
-        <td></td>
+        `
+                if (checkBox) {
+                    text += `<td></td>`;
+                }
+                text += `
         <td>
         <b style="width:150px">あなた</b>
         </td>
         <tr>
         `;
+            }
+            n++;
         }
-        n++;
     }
     if (checkBox) {
         let color = (n % 2 === 0 ? "rgb(151, 231, 211)" : "rgb(111, 155, 221)");
@@ -685,7 +703,7 @@ function meeting(checkBox = false, tophtml = 0, bottomhtml = 0, fromNum = null) 
     sethtml(text);
 }
 
-function deadPlayersMeeting(checkBox = false, tophtml = 0, bottomhtml = 0, fromNum = null) {
+function deadPlayersMeeting(checkBox = false, tophtml = 0, bottomhtml = 0, fromNum = null, killedPlayer = []) {
     let text = ``;
     if (tophtml !== 0) {
         text = `${tophtml}<br>`;
@@ -693,39 +711,45 @@ function deadPlayersMeeting(checkBox = false, tophtml = 0, bottomhtml = 0, fromN
     text += `<table id=meeting>`;
     let n = 0;
     for (let i = 0; i < deadPlayers.length; i++) {
-        if (fromNum !== i) {
-            const p = deadPlayers[i];
-            let color = (n % 2 === 0 ? "rgb(151, 231, 211)" : "rgb(111, 155, 221)");
-            text += `
+        if (!killedPlayer.includes(i)) {
+            if (fromNum !== i) {
+                const p = deadPlayers[i];
+                let color = (n % 2 === 0 ? "rgb(151, 231, 211)" : "rgb(111, 155, 221)");
+                text += `
         <tr style="background-color: ${color}">
         `;
-            if (checkBox) {
-                text += `
+                if (checkBox) {
+                    text += `
         <td style="width:60px">
         <input type="radio" name="dead" value="${i}" class="meetinginput"></input>
         </td>
         `;
 
-            }
-            text += `
+                }
+                text += `
         <td>
         <a style="width:150px">${p.name}</a>
         </td>
         <tr>
         `;
-        }
-        else {
-            let color = (n % 2 === 0 ? "rgb(231, 151, 227)" : "rgb(177, 111, 221)");
-            text += `
+            }
+            else {
+                let color = (n % 2 === 0 ? "rgb(231, 151, 227)" : "rgb(177, 111, 221)");
+                text += `
         <tr style="background-color: ${color}">
-        <td></td>
+        `
+                if (checkBox) {
+                    text += `<td></td>`;
+                }
+                text += `
         <td>
         <b style="width:150px">あなた</b>
         </td>
         <tr>
         `;
+            }
+            n++;
         }
-        n++;
     }
     if (checkBox) {
         let color = (n % 2 === 0 ? "rgb(151, 231, 211)" : "rgb(111, 155, 221)");
@@ -756,28 +780,26 @@ function roleMeeting(checkBox = false, tophtml = 0, bottomhtml = 0) {
     text += `<table id=meeting>`;
     let n = 0;
     for (let i = 0; i < gameAllRole.length; i++) {
-        if (fromNum !== i) {
-            const r = gameAllRole[i];
-            let color = (n % 2 === 0 ? "rgb(215, 151, 231)" : "rgb(172, 111, 221)");
-            text += `
+        const r = gameAllRole[i];
+        let color = (n % 2 === 0 ? "rgb(215, 151, 231)" : "rgb(172, 111, 221)");
+        text += `
         <tr style="background-color: ${color}">
         `;
-            if (checkBox) {
-                text += `
+        if (checkBox) {
+            text += `
         <td style="width:60px">
         <input type="radio" name="role" value="${r.name}" class="meetinginput" `;
-                if (i == 0) text += `checked = "true"`;
-                text += ` ></input></td>`;
+            if (i == 0) text += `checked = "true"`;
+            text += ` ></input></td>`;
 
-            }
-            text += `
+        }
+        text += `
         <td>
         <a style="width:150px">${r.name}</a>
         </td>
         <tr>
         `;
-            n++;
-        }
+        n++;
     }
     text += `</table>`;
     if (bottomhtml !== 0) {
@@ -843,12 +865,12 @@ function dessCheck() {
         switch (s.type) {
             case 'シェリフ':
                 if (p[0].type == '村人陣営') {
-                    if (!kakuShi.includes(fromP)) {
+                    if (!kakuShi.some(k => k[1] === p[1])) {
                         kakuShi.push(fromP);
                     }
                 }
                 else {
-                    if (!shi.includes(p)) {
+                    if (!shi.some(k => k[1] === p[1])) {
                         shi.push(p);
                     }
                 }
@@ -860,12 +882,12 @@ function dessCheck() {
                 break;
             case 'イビルゲッサー':
             case '自殺':
-                if (!kakuShi.includes(p)) {
+                if (!kakuShi.some(k => k[1] === p[1])) {
                     kakuShi.push(p);
                 }
                 break;
             default:
-                if (!shi.includes(p)) {
+                if (!shi.some(k => k[1] === p[1])) {
                     shi.push(p);
                 }
                 break;
@@ -895,15 +917,14 @@ function dessCheck() {
         }
     }
     if (jinnrou.length !== 0) {
-        const randomIndex = Math.floor(Math.random() * shi.length);
-        const target = shi[randomIndex];
-        const p = target[0];
-        const n = target[1];
+        const randomIndex = Math.floor(Math.random() * jinnrou.length);
+        const p = jinnrou[randomIndex][0];
+        const n = jinnrou[randomIndex][1];
         if (p && (p.role !== 'ともにゃん' && p.role !== '妖狐')) {
             if (!mamorareru.some(m => p.name === players[m].name)) {
                 deadPlayers.push(p);
                 shinnda.push(p.name);
-                players[shi[n][1]] = null;
+                players[n] = null;
             }
         }
     }
