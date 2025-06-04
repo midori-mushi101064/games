@@ -86,6 +86,11 @@ html {
     padding-bottom: 50px;
 }
 
+#color {
+    width: 180px;
+    height: 60px;
+}
+
 .scrrol a,
 .scrrol p {
     font-size: 28px;

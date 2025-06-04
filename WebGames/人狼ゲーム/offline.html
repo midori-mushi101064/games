@@ -56,7 +56,13 @@
     </div>
     <br>
     <div class="center">
-        <button onclick="console.log(players,deadPlayers)">開発者用ログ表示</button>
+        <a for="isPlaySound" style="font-size: 30px; color: white;">音楽を再生</a>
+        <input type="checkbox" id="isPlaySound" style="width: 60px;" checked="true">
+    </div>
+    <br>
+    <div class="center">
+        <!--<button onclick="console.log(players,deadPlayers)">開発者用ログ表示</button>-->
+        <input type="color" id="color" onchange="changeBackColor();">
     </div>
     <br>
     <br>

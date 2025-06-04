@@ -63,9 +63,9 @@ let gameTurn;
 let killedPlayerNum;
 
 function gameStart() {
-    sound('sounds/redWin.mp3', 'stop');
-    sound('sounds/blueWin.mp3', 'stop');
-    sound('sounds/noWin.mp3', 'stop');
+    playSound('sounds/redWin.mp3', 'stop');
+    playSound('sounds/blueWin.mp3', 'stop');
+    playSound('sounds/noWin.mp3', 'stop');
     let thisGameRole = [[...AllBlueRole], [...AllRedRole], [...AllGreenRole]];
     let thisGamePeople = [blue, red, green];
     deadPlayers = [];
@@ -99,14 +99,14 @@ function gameStart() {
     deadNum = '無し';
     isFirstTurn = true;
     gameTurn = -1;
-    sound('sounds/redWin.mp3', 'start');
-    sound(`sounds/start${Math.floor(Math.random() * 3) + 1}.mp3`, 'start');
+    playSound('sounds/redWin.mp3', 'start');
+    playSound(`sounds/start${Math.floor(Math.random() * 3) + 1}.mp3`, 'start');
     sethtml(`<b>人狼ゲーム</b><br><button>クリックしてスタート</button>`);
     setTimeout(() => {
-        sound('sounds/redWin.mp3', 'stop');
-        sound('sounds/start1.mp3', 'stop');
-        sound('sounds/start2.mp3', 'stop');
-        sound('sounds/start3.mp3', 'stop');
+        playSound('sounds/redWin.mp3', 'stop');
+        playSound('sounds/start1.mp3', 'stop');
+        playSound('sounds/start2.mp3', 'stop');
+        playSound('sounds/start3.mp3', 'stop');
         nextTurn();
     }, 2000);
 }
@@ -117,7 +117,7 @@ function sethtml(html) {
 }
 
 function nextTurn() {
-    sound('sounds/change.mp3', 'start');
+    playSound('sounds/change.mp3', 'start');
     turn++;
     const box = document.getElementById("box");
     box.style.backgroundColor = "rgb(139, 115, 196)";
@@ -133,25 +133,25 @@ function nextTurn() {
     else if (turn == players.length + 1) {
         if (gameAllRole.some(m => m.name === 'パン屋')) {
             if (players.some(m => m.role === 'パン屋')) {
-                sound('sounds/pann1.mp3', 'start');
-                sound('sounds/pann2.mp3', 'start');
+                playSound('sounds/pann1.mp3', 'start');
+                playSound('sounds/pann2.mp3', 'start');
                 sethtml(`<a>1件のメッセージ</a><br><a style='font-size: 50px;'>おいしいパンが焼けました</a><br><button onclick='nextTurn();'>りょーかい！</button>`);
             }
             else {
-                sound('sounds/pann3.mp3', 'start');
+                playSound('sounds/pann3.mp3', 'start');
                 sethtml(`<a>1件のメッセージ</a><br><a style='font-size: 50px;'>パンは焼かれていませんでした</a><br><button onclick='nextTurn();'>りょーかい！</button>`);
             }
         }
         else {
-            sound('sounds/noMesse.mp3', 'start');
+            playSound('sounds/noMesse.mp3', 'start');
             sethtml(`<a style='font-size: 50px;'>特にメッセージはありません</a><br><button onclick='nextTurn();'>りょーかい！</button>`);
         }
     }
     else if (turn == players.length + 2) {
-        sound('sounds/noMesse.mp3', 'stop');
-        sound('sounds/pann1.mp3', 'stop');
-        sound('sounds/pann2.mp3', 'stop');
-        sound('sounds/pann3.mp3', 'stop');
+        playSound('sounds/noMesse.mp3', 'stop');
+        playSound('sounds/pann1.mp3', 'stop');
+        playSound('sounds/pann2.mp3', 'stop');
+        playSound('sounds/pann3.mp3', 'stop');
         if (!isFirstTurn) {
             if (skip == '会議') {
                 skip = '無し';
@@ -223,22 +223,26 @@ function firstTurn() {
 function voting() {
     meeting(true, `<a>投票</a>`, `<button onclick='exile();'>決定</button>`);
 }
-
 function exile() {
     const n = document.querySelector('input[name="kill"]:checked').value;
     const box = document.getElementById("box");
     if (n !== 'skip') {
         box.style.backgroundColor = "rgb(221, 109, 109)";
         const p = players[n];
-        sethtml(`<a style='font-size: 50px;'>${p.name}</a><br><a>は追放された</a><br><button onclick='nextTurn();'>りょーかい！</button>`);
+        sethtml(`<a style='font-size: 50px;'>${p.name}</a><br><a>は追放された</a><br><button onclick='dessCheck(false);'>りょーかい！</button>`);
         deadNum = deadPlayers.length;
-        deadPlayers.push(p);
-        players.splice(n, 1);
+        const kill = { Num: n, type: '自殺', fromNum: n };
+        shinuyotei.push(kill);
+        if (p.role.includes('猫又')) {
+            const randomIndex = Math.floor(Math.random() * players.length);
+            const kill = { Num: randomIndex, type: '猫又', fromNum: randomIndex };
+            shinuyotei.push(kill);
+        }
     }
     else {
         box.style.backgroundColor = "rgb(119, 164, 248)";
         deadNum = '無し';
-        sethtml(`<a>だれも</a><br><a>追放されなかった</a><br><button onclick='nextTurn();'>りょーかい！</button>`);
+        sethtml(`<a>だれも</a><br><a>追放されなかった</a><br><button onclick='dessCheck(false);'>りょーかい！</button>`);
     }
 }
 
@@ -248,6 +252,7 @@ function myTurn(n = 1) {
     const box = document.getElementById("box");
     if (myturnNum == -1) {
         sethtml(`<a style='font-size: 50px;'>${p.name}</a><br><a>のターンです</a><br><a>本人だけが画面を見てください。</a><br><button onclick='myTurn();'>次へ</button>`);
+        killedPlayerNum = [];
     }
     else if (myturnNum == 0) {
         let role = p.role;
@@ -422,6 +427,10 @@ function myTurn(n = 1) {
                 break;
             case 'タフガイ':
                 waitRundom();
+                if (players[turn].date1 == 1) {
+                    let kill = { Num: turn, type: '自殺', fromNum: turn };
+                    shinuyotei.push(kill);
+                }
                 break;
             case 'シールダー':
                 if (myturnNum == 1) {
@@ -844,7 +853,7 @@ function sameRoleList(type, checkBox = false, tophtml = 0, bottomhtml = 0) {
     }
     sethtml(text);
 }
-function dessCheck() {
+function dessCheck(isTurnSet = true) {
     let jinnrou = [];
     let shi = [];
     let kakuShi = [];
@@ -873,6 +882,24 @@ function dessCheck() {
                     if (!shi.some(k => k[1] === p[1])) {
                         shi.push(p);
                     }
+                }
+                break;
+            case '猫又':
+                if (p[0].role.includes('猫又')) {
+                    let killP = pNum;
+                    let n = 0;
+                    while (players[killP].role.includes('猫又')) {
+                        const randomIndex = Math.floor(Math.random() * players.length);
+                        if (!kakuShi.some(k => k[1] === randomIndex)) {
+                            kakuShi.push([players[randomIndex], randomIndex]);
+                            killP = randomIndex;
+                        }
+                        n++;
+                        if (n == 100) break;
+                    }
+                }
+                if (!kakuShi.some(k => k[1] === p[1])) {
+                    kakuShi.push(p);
                 }
                 break;
             case '人狼陣営':
@@ -909,10 +936,15 @@ function dessCheck() {
         const p = shi[i][0];
         const n = shi[i][1];
         if (p && (p.role !== 'ともにゃん' && p.role !== '妖狐')) {
-            if (!mamorareru.some(m => p.name === players[m].name)) {
-                deadPlayers.push(p);
-                shinnda.push(p.name);
-                players[n] = null;
+            if (p.role == 'タフガイ' && p.date1 !== 1) {
+                players[n].date1 = 1;
+            }
+            else {
+                if (!mamorareru.some(m => p.name === players[m].name)) {
+                    deadPlayers.push(p);
+                    shinnda.push(p.name);
+                    players[n] = null;
+                }
             }
         }
     }
@@ -921,10 +953,15 @@ function dessCheck() {
         const p = jinnrou[randomIndex][0];
         const n = jinnrou[randomIndex][1];
         if (p && (p.role !== 'ともにゃん' && p.role !== '妖狐')) {
-            if (!mamorareru.some(m => p.name === players[m].name)) {
-                deadPlayers.push(p);
-                shinnda.push(p.name);
-                players[n] = null;
+            if (p.role == 'タフガイ' && p.date1 !== 1) {
+                players[n].date1 = 1;
+            }
+            else {
+                if (!mamorareru.some(m => p.name === players[m].name)) {
+                    deadPlayers.push(p);
+                    shinnda.push(p.name);
+                    players[n] = null;
+                }
             }
         }
     }
@@ -944,11 +981,11 @@ function dessCheck() {
         }
         text += `</table><br><button onclick='nextTurn();'>りょーかい！</button>`;
         sethtml(text);
-        sound('sounds/dess.mp3', 'start');
+        playSound('sounds/dess.mp3', 'start');
     }
     else {
         sethtml(`<b style='font-size: 50px;'>だれも</b><br><b style='font-size: 50px;'>死ななかった</b><br><button onclick='nextTurn();'>りょーかい！</button>`);
-        sound('sounds/noMesse.mp3', 'start');
+        playSound('sounds/noMesse.mp3', 'start');
     }
     players = players.filter(n => n !== null);
     mamorareru = mamorareru.filter(n => n !== null);
@@ -957,7 +994,7 @@ function dessCheck() {
     mamorareru = [];
     norowareru = [];
 
-    turn = players.length;
+    if (isTurnSet) turn = players.length;
 }
 
 function typeCheck(p) {
@@ -1035,16 +1072,6 @@ function clearCheck() {
     let win = 0;
     let winText = '';
     let color = 'black';
-    if (deadPlayers[deadNum] && deadPlayers[deadNum].role == '吊り人') {
-        win = deadPlayers[deadNum].name;
-        winText = '吊り人が吊られた';
-        color = deadPlayers[deadNum].color;
-    }
-    else if (players.length == 0) {
-        win = '全滅'
-        winText = 'まさかの勝者なし';
-        color = "#333";
-    }
     if (blueNum <= redNum && greenNum == 0) {
         win = '人狼陣営'
         winText = '村は狼によって壊滅させられた';
@@ -1080,15 +1107,25 @@ function clearCheck() {
             }
         });
     }
+    if (deadPlayers[deadNum] && deadPlayers[deadNum].role == '吊り人') {
+        win = deadPlayers[deadNum].name;
+        winText = '吊り人が吊られた';
+        color = deadPlayers[deadNum].color;
+    }
+    else if (players.length == 0) {
+        win = '全滅'
+        winText = 'まさかの勝者なし';
+        color = "#333";
+    }
     switch (win) {
         case '全滅':
-            sound('sounds/noWin.mp3', 'start');
+            playSound('sounds/noWin.mp3', 'start');
             break;
         case '人狼陣営':
-            sound('sounds/redWin.mp3', 'start');
+            playSound('sounds/redWin.mp3', 'start');
             break;
         case '村人陣営':
-            sound('sounds/blueWin.mp3', 'start');
+            playSound('sounds/blueWin.mp3', 'start');
             break;
     }
     if (win !== 0) {
@@ -1157,4 +1194,14 @@ function godRoleCheck(tophtml = 0, bottomhtml = 0) {
     text += (`</table>${bottomhtml}`);
 
     sethtml(text);
+}
+
+function changeBackColor() {
+    document.body.style.backgroundColor = document.getElementById('color').value;
+}
+
+function playSound(a, b, c) {
+    if (document.getElementById("isPlaySound").checked == true) {
+        sound(a, b, c);
+    }
 }
